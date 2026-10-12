@@ -4,7 +4,8 @@ Her dosya açılıp içeriğine bakılarak tanımlandı; dosya adları esas alı
 
 | Dosya | İçerik | Boyut | Kullanım |
 |---|---|---|---|
-| `Emberwick Games Piksel Sanat Varlık Panosu.png` | **Moodboard**: logo, pixel ikonlar, sosyal ikonlar, buton örnekleri, fontlar, hero/studio/footer/privacy/404 sahneleri, oyun görselleri, Google Play rozeti, dokular | 1536×1024, 2.1 MB | Sanat yönetiminin ana referansı (renk, buton, tipografi, ikon dili). Klasörde sahnelerin ayrı dosyaları olmadığı için şu **yer tutucu kırpımlar** buradan alındı (gömülü yazı ve arayüz öğeleri kırpımın dışında bırakıldı): `scenes/hero.png` (826×312), `scenes/studio.png` (492×212), `scenes/footer.png` (685×95, alttaki sahte menü/logo hariç), `scenes/privacy-scroll.png` (136×148) ve `scenes/privacy-lantern.png` (85×148) (ortadaki "Privacy Policy" yazısı hariç), `scenes/lost-traveller.png` (110×82, 404 sahnesinin yazısız sol kısmı) |
+| `Emberwick Games Piksel Sanat Varlık Panosu.png` | **Moodboard**: logo, pixel ikonlar, sosyal ikonlar, buton örnekleri, fontlar, hero/studio/footer/privacy/404 sahneleri, oyun görselleri, Google Play rozeti, dokular | 1536×1024, 2.1 MB | Sanat yönetiminin ana referansı (renk, buton, tipografi, ikon dili). Klasörde sahnelerin ayrı dosyaları olmadığı için şu **yer tutucu kırpımlar** buradan alındı (gömülü yazı ve arayüz öğeleri kırpımın dışında bırakıldı): `scenes/studio.png` (492×212), `scenes/footer.png` (685×95, alttaki sahte menü/logo hariç), `scenes/privacy-scroll.png` (136×148) ve `scenes/privacy-lantern.png` (85×148) (ortadaki "Privacy Policy" yazısı hariç), `scenes/lost-traveller.png` (110×82, 404 sahnesinin yazısız sol kısmı) |
+| `Main Page Backgorund.png` | Ana sayfa sahnesi: kamp ateşi başında karakter, ağaç ve fener, göl kıyısında kale, dolunay | 1672×941, 2.5 MB | Hero arka planı (`scenes/hero.png`) ve OG görseli |
 | `Logo v2.png` | Emberwick Games logosu: çerçeveli, kor sembolü ve "EMBERWICK GAMES" yazısı, düz koyu zemin (#212429), dış kenarı şeffaf | 1024×1024, 426 KB | `brand/logo-full.png` (şeffaf kenarı kırpılmış tam logo; OG görselinde kullanıldı). `brand/logo-mark.png` ve `brand/logo-wordmark.png`: header ve footer'daki yatay logo için sembol ve yazı ayrı kırpıldı, düz zemin renk arındırmasıyla şeffaflaştırıldı (koyu ve açık zeminde halo kontrolü yapıldı). Favicon'lar (`favicon-32`, `favicon-192`, `apple-touch-icon`, `icon-512`) kor sembolünden üretildi |
 | `512x512.png` | Dice Merge uygulama simgesi (renkli pixel zarlar) | 512×512, 320 KB | Öne çıkan oyun bölümü, /games kartı, oyun detay başlığı |
 | `1024x500.png` | Dice Merge tanıtım görseli (oyunun kendi logosu gömülü) | 1024×500, 632 KB | Öne çıkan oyun kompozisyonu, /games kartı, oyun detay arka planı. Gömülü yazı oyunun logosu olduğu için olduğu gibi kullanıldı |
@@ -32,7 +33,7 @@ Aşağıdakilerin hepsi moodboard'dan kırpılmış yer tutucular. Ayrı, yükse
 
 | Varlık | Mevcut | Önerilen |
 |---|---|---|
-| Hero arka planı | 826×312 (1920 ekranda yaklaşık 3.5 kat büyütülüyor, yumuşak görünüyor) | ≥ 2560×1440 |
+| Hero arka planı | 1672×941 (ayrı dosya; 1920 ekranda yaklaşık 1.15 kat büyütülüyor) | yeterli; 2560 px genişlik olursa daha da keskin olur |
 | Studio sahnesi | 492×212 | ≥ 1600×900 |
 | Footer sahnesi | 685×95 | ≥ 2560×400 |
 | Privacy banner (parşömen ve fener) | 136×148 ve 85×148 | ≥ 1920×480, yazısız tek parça |

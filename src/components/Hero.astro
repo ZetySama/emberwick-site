@@ -5,14 +5,14 @@ import heroScene from '../assets/scenes/hero.png';
 
 // A handful of embers rising from the campfire (left, value = % of hero width; d = duration; s = delay).
 const sparks = [
-  { left: 27, d: 7.5, s: 0 },
-  { left: 29, d: 9, s: 2.4 },
-  { left: 31, d: 8, s: 4.1 },
-  { left: 33, d: 10, s: 1.2 },
-  { left: 35, d: 8.5, s: 5.6 },
-  { left: 30, d: 11, s: 6.8 },
-  { left: 34, d: 9.5, s: 3.3 },
-  { left: 32, d: 7, s: 7.9 },
+  { left: 33, d: 7.5, s: 0 },
+  { left: 35, d: 9, s: 2.4 },
+  { left: 37, d: 8, s: 4.1 },
+  { left: 39, d: 10, s: 1.2 },
+  { left: 36, d: 8.5, s: 5.6 },
+  { left: 34, d: 11, s: 6.8 },
+  { left: 38, d: 9.5, s: 3.3 },
+  { left: 36, d: 7, s: 7.9 },
 ];
 ---
 
@@ -22,6 +22,8 @@ const sparks = [
       src={heroScene}
       alt=""
       formats={['avif', 'webp']}
+      widths={[640, 1024, 1672]}
+      sizes="100vw"
       priority
       class="hero__img"
     />
@@ -128,7 +130,7 @@ const sparks = [
   .hero__sparks span {
     position: absolute;
     left: var(--x);
-    bottom: 16%;
+    bottom: 22%;
     width: 3px;
     height: 3px;
     background: var(--ember);
@@ -270,7 +272,7 @@ const sparks = [
     }
 
     .hero__sparks span {
-      left: calc(50% + (var(--x) - 31%) * 3);
+      left: calc(50% + (var(--x) - 36%) * 2);
       bottom: 20%;
     }
 

@@ -17,7 +17,6 @@ await Promise.all(
 
 // --- Scene placeholders cropped from the moodboard (inner panel area, labels and borders excluded) ---
 const scenes = {
-  hero: { left: 17, top: 166, width: 826, height: 312 },
   studio: { left: 17, top: 510, width: 492, height: 212 },
   // Upper part of the footer panel only: the lower part contains a mock nav/logo baked into the image.
   footer: { left: 16, top: 755, width: 685, height: 95 },
@@ -30,6 +29,9 @@ const scenes = {
 for (const [name, region] of Object.entries(scenes)) {
   await sharp(MOODBOARD).extract(region).png().toFile(out('src/assets/scenes', `${name}.png`));
 }
+
+// Hero background: dedicated full scene supplied separately.
+await copyFile(path.join(REF, 'Main Page Backgorund.png'), out('src/assets/scenes', 'hero.png'));
 
 // --- Logo ---
 // Full framed logo: trim the transparent outer margin.
