@@ -1,0 +1,86 @@
+---
+interface Props {
+  /** File name without extension inside /media/mascots/ (e.g. "hero-greeting"). */
+  name: string;
+  width?: number;
+  height?: number;
+  /** Short description. Leave empty when the clip is purely decorative. */
+  alt?: string;
+  class?: string;
+}
+
+const { name, width = 448, height = 252, alt = '', class: className } = Astro.props;
+const base = `/media/mascots/${name}`;
+---
+
+<div class:list={['mascot-loop', className]} data-mascot role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : 'true'}>
+  <img class="mascot-loop__poster" src={`${base}-poster.webp`} width={width} height={height} alt="" decoding="async" />
+  <video class="mascot-loop__video" autoplay loop muted playsinline preload="metadata" width={width} height={height} poster={`${base}-poster.webp`} aria-hidden="true" tabindex="-1">
+    <source src={`${base}.webm`} type="video/webm" />
+    <source src={`${base}.mp4`} type="video/mp4" />
+  </video>
+</div>
+
+<style>
+  .mascot-loop {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--cream);
+    border: 2px solid var(--cream);
+    border-radius: 16px;
+    box-shadow: 0 0 0 1px var(--line), 0 18px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .mascot-loop__poster,
+  .mascot-loop__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mascot-loop__video {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Play only while visible; skip video entirely when the user prefers reduced motion.
+  const loops = document.querySelectorAll<HTMLElement>('[data-mascot]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const videos: HTMLVideoElement[] = [];
+  loops.forEach((el) => {
+    const video = el.querySelector('video');
+    if (!video) return;
+    if (reduce) {
+      video.pause();
+      video.remove();
+    } else {
+      videos.push(video);
+    }
+  });
+
+  if (videos.length) {
+    if (!('IntersectionObserver' in window)) {
+      videos.forEach((v) => void v.play().catch(() => {}));
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const v = entry.target as HTMLVideoElement;
+            if (entry.isIntersecting) void v.play().catch(() => {});
+            else v.pause();
+          }
+        },
+        { threshold: 0.25 },
+      );
+      videos.forEach((v) => io.observe(v));
+    }
+  }
+</script>
