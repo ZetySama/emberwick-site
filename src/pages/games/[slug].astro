@@ -1,0 +1,255 @@
+---
+import { Image, Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.astro';
+import Gallery from '../../components/Gallery.astro';
+import GooglePlayBadge from '../../components/GooglePlayBadge.astro';
+import PixelIcon from '../../components/icons/PixelIcon.astro';
+import { diceMap, palettes } from '../../components/icons/pixel-maps';
+import { games, type Game } from '../../data/games';
+import { emailWrapHtml, site } from '../../config/site';
+
+export function getStaticPaths() {
+  return games.map((game) => ({ params: { slug: game.slug }, props: { game } }));
+}
+
+interface Props {
+  game: Game;
+}
+
+const { game } = Astro.props;
+---
+
+<BaseLayout title={game.title} description={`${game.title}: ${game.tagline} ${game.summary}`}>
+  <section class="game-hero" aria-labelledby="game-title">
+    <div class="game-hero__bg" aria-hidden="true">
+      <Picture src={game.feature} alt="" formats={['avif', 'webp']} widths={[512, 1024]} sizes="100vw" priority />
+    </div>
+    <div class="container game-hero__inner">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/games">Games</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{game.title}</span>
+      </nav>
+      <div class="game-hero__head">
+        <Image src={game.icon} alt={`${game.title} app icon`} width={112} densities={[1, 2]} class="game-hero__icon" priority />
+        <div>
+          <p class="eyebrow">{game.platform}</p>
+          <h1 id="game-title">{game.title}</h1>
+        </div>
+      </div>
+      <p class="game-hero__tagline">{game.tagline}</p>
+      <p class="game-hero__summary">{game.summary}</p>
+      <div class="game-hero__actions">
+        <GooglePlayBadge url={game.googlePlayUrl} />
+        <Button href="#gallery" variant="link" arrow={false}>See screenshots ↓</Button>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" class="section gallery-section" aria-labelledby="gallery-title">
+    <div class="container">
+      <h2 id="gallery-title">Gameplay</h2>
+      <Gallery shots={game.screenshots} label={`${game.title} screenshots`} />
+    </div>
+  </section>
+
+  <section class="section details" aria-label={`About ${game.title}`}>
+    <div class="container details__grid">
+      <div class="details__features" data-reveal>
+        <h2>Features</h2>
+        <ul class="features">
+          {
+            game.features.map((f) => (
+              <li>
+                <PixelIcon map={diceMap} palette={palettes.dice} size={20} />
+                <span>{f}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <aside class="details__support" data-reveal style="--reveal-delay: 0.1s" aria-labelledby="support-title">
+        <h2 id="support-title">Support</h2>
+        <p class="muted">Questions, feedback or a bug to report? Write to us by email.</p>
+        <p>
+          <a href={`mailto:${site.email}?subject=${encodeURIComponent(`${game.title} support`)}`} class="support-mail">
+            <Fragment set:html={emailWrapHtml} />
+          </a>
+        </p>
+        <p class="details__privacy">
+          <a href={game.privacyPath}>Privacy Policy</a>
+        </p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .game-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3rem, 7vw, 5.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .game-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .game-hero__bg :global(picture),
+  .game-hero__bg :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .game-hero__bg :global(img) {
+    object-fit: cover;
+    object-position: 50% 30%;
+    opacity: 0.22;
+    filter: saturate(0.85);
+  }
+
+  .game-hero__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, var(--bg) 0%, rgba(16, 18, 26, 0.8) 55%, rgba(16, 18, 26, 0.55) 100%),
+      linear-gradient(0deg, var(--bg) 0%, rgba(16, 18, 26, 0) 40%);
+  }
+
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .crumbs a {
+    color: var(--muted);
+  }
+
+  .crumbs a:hover {
+    color: var(--ember);
+  }
+
+  .crumbs [aria-current] {
+    color: var(--cream);
+  }
+
+  .game-hero__head {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 1.75rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .game-hero__head .eyebrow {
+    margin-bottom: 0.6rem;
+  }
+
+  .game-hero__head h1 {
+    margin: 0;
+  }
+
+  .game-hero__icon {
+    width: clamp(80px, 14vw, 112px);
+    height: auto;
+    border-radius: 22%;
+    box-shadow: 0 0 0 2px rgba(239, 199, 121, 0.35), 0 14px 32px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+  }
+
+  .game-hero__tagline {
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
+    color: var(--cream);
+  }
+
+  .game-hero__summary {
+    max-width: 58ch;
+    color: var(--muted);
+  }
+
+  .game-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .gallery-section h2 {
+    margin-bottom: 2rem;
+  }
+
+  .details {
+    padding-top: 0;
+  }
+
+  .details__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+
+  .features :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+
+  .details__support {
+    padding: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--teal);
+    border-radius: var(--radius);
+  }
+
+  .support-mail {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .details__privacy {
+    margin: 0;
+  }
+
+  @media (max-width: 899px) {
+    .details__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 559px) {
+    .features {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

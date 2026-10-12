@@ -1,0 +1,57 @@
+---
+import { Picture } from 'astro:assets';
+import Button from './Button.astro';
+import studioScene from '../assets/scenes/studio.png';
+---
+
+<section id="studio" class="section studio-intro" aria-labelledby="studio-intro-title">
+  <div class="container studio-intro__grid">
+    <div class="studio-intro__art frame" data-reveal>
+      <Picture
+        src={studioScene}
+        alt="Pixel-art studio at night: a developer works on a laptop beside a crackling fireplace, a cat resting nearby."
+        formats={['avif', 'webp']}
+        sizes="(min-width: 900px) 55vw, 100vw"
+      />
+    </div>
+
+    <div class="studio-intro__text" data-reveal style="--reveal-delay: 0.1s">
+      <p class="eyebrow">The studio</p>
+      <h2 id="studio-intro-title">Built with care. Made for play.</h2>
+      <p class="lead">
+        Emberwick Games is a small, independent studio. We make compact games that are easy to pick up and
+        hard to put down: clear rules, a world with its own mood, and details that reward a closer look.
+      </p>
+      <p class="muted">
+        We take our time, test our ideas by playing them, and keep only what makes the game better.
+      </p>
+      <Button href="/studio" variant="link">Learn More</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .studio-intro__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+  }
+
+  .studio-intro__art :global(img) {
+    width: 100%;
+    aspect-ratio: 492 / 212;
+    object-fit: cover;
+  }
+
+  @media (max-width: 899px) {
+    .studio-intro__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .studio-intro__art :global(img) {
+      aspect-ratio: 4 / 3;
+      object-position: 38% 50%;
+    }
+  }
+</style>

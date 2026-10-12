@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import GameCard from '../../components/GameCard.astro';
+import { games } from '../../data/games';
+---
+
+<BaseLayout title="Games" description="Games by Emberwick Games, starting with Dice Merge, a pixel-art dice merging puzzle.">
+  <PageIntro eyebrow="Our games" title="Games">
+    <p>Small worlds you can carry in your pocket.</p>
+  </PageIntro>
+
+  <section class="section games" aria-label="Game list">
+    <div class="container games__list">
+      {games.map((game) => <GameCard game={game} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .games {
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .games__list {
+    display: grid;
+    gap: 2rem;
+  }
+</style>

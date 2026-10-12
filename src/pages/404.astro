@@ -1,0 +1,144 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import traveller from '../assets/scenes/lost-traveller.png';
+
+const stars = [
+  [8, 18], [16, 62], [24, 30], [31, 78], [42, 12], [55, 40], [63, 70], [71, 22], [80, 55], [88, 15], [93, 75], [12, 85], [48, 88],
+];
+---
+
+<BaseLayout title="Page not found" description="This path leads nowhere." noindex>
+  <section class="nf" aria-labelledby="nf-title">
+    <div class="nf__sky" aria-hidden="true">
+      {stars.map(([x, y], i) => <span style={`left:${x}%;top:${y}%;--s:${(i % 5) * 0.8}s`}></span>)}
+    </div>
+
+    <div class="container nf__inner">
+      <div class="nf__art" aria-hidden="true">
+        <Image src={traveller} alt="" class="nf__traveller" loading="eager" />
+        <span class="nf__ember"></span>
+      </div>
+
+      <div class="nf__text">
+        <p class="eyebrow">Error 404</p>
+        <h1 id="nf-title">This path leads nowhere.</h1>
+        <p class="lead">
+          The page you are looking for does not exist or has moved. The ember went out here, but there are other paths
+          to explore.
+        </p>
+        <div class="nf__actions">
+          <Button href="/">Back to Home</Button>
+          <Button href="/games" variant="outline">Explore Games</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(3.5rem, 9vw, 7rem);
+    background: radial-gradient(ellipse 80% 70% at 30% 70%, rgba(49, 93, 88, 0.25), rgba(16, 18, 26, 0) 70%), var(--bg);
+  }
+
+  .nf__sky span {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--cream);
+    opacity: 0.35;
+    animation: twinkle 5s ease-in-out var(--s) infinite;
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+
+  .nf__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  .nf__art {
+    position: relative;
+    width: 330px;
+    max-width: 100%;
+  }
+
+  .nf__traveller {
+    width: 100%;
+    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+  }
+
+  /* A dying ember glow next to the traveller's lantern */
+  .nf__ember {
+    position: absolute;
+    left: 74%;
+    top: 58%;
+    width: 60px;
+    height: 60px;
+    margin: -30px 0 0 -30px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 129, 69, 0.35), rgba(255, 129, 69, 0) 70%);
+    animation: fade 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes fade {
+    0%,
+    100% {
+      opacity: 0.9;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 767px) {
+    .nf__inner {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .nf__art {
+      width: 240px;
+    }
+
+    .nf__text .lead {
+      margin-inline: auto;
+    }
+
+    .nf__actions {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .nf__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

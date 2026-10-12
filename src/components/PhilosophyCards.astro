@@ -1,0 +1,174 @@
+---
+import PixelIcon from './icons/PixelIcon.astro';
+import { crownMap, diceMap, lanternMap, palettes } from './icons/pixel-maps';
+
+const pillars = [
+  {
+    title: 'Thoughtful Mechanics',
+    text: 'Rules you can learn in a minute, with enough depth to keep you thinking. Every move should feel like a choice worth making.',
+    map: diceMap,
+    palette: palettes.dice,
+    accent: 'ember',
+  },
+  {
+    title: 'Distinctive Worlds',
+    text: 'Each game gets its own look and mood, from candle-lit tables to starry skies, drawn in pixel art with care.',
+    map: lanternMap,
+    palette: palettes.lantern,
+    accent: 'teal',
+  },
+  {
+    title: 'Crafted Experiences',
+    text: 'Clear feedback, readable screens and small touches that reward attention. We polish the details players notice and the ones they only feel.',
+    map: crownMap,
+    palette: palettes.crown,
+    accent: 'gold',
+  },
+] as const;
+---
+
+<section class="section philosophy" aria-labelledby="philosophy-title">
+  <div class="container">
+    <header class="philosophy__head" data-reveal>
+      <p class="eyebrow">Design philosophy</p>
+      <h2 id="philosophy-title">What guides every game we make</h2>
+    </header>
+
+    <ul class="philosophy__list">
+      {
+        pillars.map((p, i) => (
+          <li class={`pillar pillar--${p.accent}`} data-reveal style={`--reveal-delay:${i * 0.1}s`}>
+            <div class="pillar__icon">
+              <PixelIcon map={p.map} palette={p.palette} size={72} />
+            </div>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .philosophy__head {
+    max-width: 40rem;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .philosophy__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: start;
+  }
+
+  .pillar {
+    --accent: var(--ember);
+    position: relative;
+    padding: 2rem 1.75rem 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition:
+      border-color 0.3s var(--ease),
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+
+  .pillar::before {
+    content: '';
+    position: absolute;
+    left: 1.75rem;
+    top: -1px;
+    width: 3.5rem;
+    height: 3px;
+    background: var(--accent);
+  }
+
+  .pillar--teal {
+    --accent: #5fa59b;
+  }
+
+  .pillar--gold {
+    --accent: var(--gold);
+  }
+
+  .pillar:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+  }
+
+  .pillar__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 96px;
+    height: 96px;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    background: radial-gradient(circle at 50% 55%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+  }
+
+  .pillar h3 {
+    color: var(--cream);
+  }
+
+  .pillar p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  @media (min-width: 900px) {
+    .pillar--teal {
+      margin-top: 2.5rem;
+    }
+
+    .pillar--gold {
+      margin-top: 5rem;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .philosophy__list {
+      grid-template-columns: 1fr;
+    }
+
+    .pillar {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 1.25rem;
+      padding: 1.5rem;
+    }
+
+    .pillar__icon {
+      grid-row: span 2;
+      width: 72px;
+      height: 72px;
+      margin: 0;
+    }
+
+    .pillar__icon :global(svg) {
+      width: 56px;
+      height: 56px;
+    }
+
+    .pillar h3 {
+      align-self: end;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .pillar {
+      grid-template-columns: 1fr;
+    }
+
+    .pillar__icon {
+      grid-row: auto;
+      margin-bottom: 1rem;
+    }
+  }
+</style>

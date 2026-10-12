@@ -1,0 +1,160 @@
+---
+import { Image, Picture } from 'astro:assets';
+import Button from './Button.astro';
+import GooglePlayBadge from './GooglePlayBadge.astro';
+import type { Game } from '../data/games';
+
+interface Props {
+  game: Game;
+}
+
+const { game } = Astro.props;
+const [shotA, shotB] = game.screenshots;
+---
+
+<section class="section featured" aria-labelledby="featured-title">
+  <div class="featured__glow" aria-hidden="true"></div>
+  <div class="container featured__grid">
+    <div class="featured__text" data-reveal>
+      <p class="eyebrow">Featured game</p>
+      <div class="featured__heading">
+        <Image src={game.icon} alt="" width={72} densities={[1, 2]} class="featured__icon" />
+        <h2 id="featured-title">{game.title}</h2>
+      </div>
+      <p class="featured__tagline">{game.tagline}</p>
+      <p class="muted">{game.summary}</p>
+      <div class="featured__actions">
+        <Button href={`/games/${game.slug}`} variant="outline">View Game</Button>
+        <GooglePlayBadge url={game.googlePlayUrl} />
+      </div>
+    </div>
+
+    <div class="showcase" data-reveal style="--reveal-delay: 0.1s">
+      <div class="showcase__art frame">
+        <Picture
+          src={game.feature}
+          alt={game.featureAlt}
+          formats={['avif', 'webp']}
+          widths={[512, 1024]}
+          sizes="(min-width: 900px) 58vw, 100vw"
+        />
+      </div>
+      <figure class="showcase__shot showcase__shot--a frame">
+        <Picture src={shotA.src} alt={shotA.alt} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[240, 480]} sizes="(min-width: 900px) 220px, 42vw" />
+      </figure>
+      <figure class="showcase__shot showcase__shot--b frame">
+        <Picture src={shotB.src} alt={shotB.alt} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[240, 480]} sizes="(min-width: 900px) 220px, 42vw" />
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured {
+    position: relative;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 50%, var(--bg) 100%);
+    overflow: hidden;
+  }
+
+  .featured__glow {
+    position: absolute;
+    right: -10%;
+    top: 20%;
+    width: 60%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(255, 129, 69, 0.12), rgba(255, 129, 69, 0) 65%);
+    pointer-events: none;
+  }
+
+  .featured__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 5rem);
+  }
+
+  .featured__heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .featured__heading h2 {
+    margin: 0;
+  }
+
+  .featured__icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    box-shadow: 0 0 0 2px rgba(239, 199, 121, 0.3), 0 10px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .featured__tagline {
+    font-size: 1.15rem;
+    color: var(--cream);
+  }
+
+  .featured__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+
+  .showcase {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .showcase__art {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .showcase__art :global(img) {
+    width: 100%;
+    aspect-ratio: 1024 / 500;
+  }
+
+  .showcase__shot {
+    margin: 0;
+    grid-row: 2;
+    position: relative;
+    z-index: 1;
+  }
+
+  .showcase__shot :global(img) {
+    width: 100%;
+    aspect-ratio: 945 / 2048;
+  }
+
+  .showcase__shot--a {
+    grid-column: 3 / 7;
+    margin-top: -22%;
+  }
+
+  .showcase__shot--b {
+    grid-column: 8 / 12;
+    margin-top: -8%;
+  }
+
+  @media (max-width: 899px) {
+    .featured__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .showcase__shot--a {
+      grid-column: 2 / 7;
+      margin-top: -14%;
+    }
+
+    .showcase__shot--b {
+      grid-column: 7 / 12;
+      margin-top: -4%;
+    }
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+// Renders nothing unless a Google Play URL is configured. Uses the official badge file from
+// src/assets/badges/ when present; otherwise falls back to a plain text button (never a redrawn badge).
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Button from './Button.astro';
+
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+const badges = import.meta.glob<{ default: ImageMetadata }>('../assets/badges/google-play.{png,webp,svg}', {
+  eager: true,
+});
+const badge = Object.values(badges)[0]?.default;
+---
+
+{
+  url.trim() !== '' &&
+    (badge ? (
+      <a href={url} class="gp-badge" target="_blank" rel="noopener noreferrer">
+        <Image src={badge} alt="Get it on Google Play" height={56} densities={[1, 2]} />
+      </a>
+    ) : (
+      <Button href={url} variant="outline">
+        Get it on Google Play
+      </Button>
+    ))
+}
+
+<style>
+  .gp-badge {
+    display: inline-flex;
+    border-radius: 8px;
+    transition: transform 0.2s var(--ease);
+  }
+
+  .gp-badge:hover {
+    transform: translateY(-1px);
+  }
+
+  .gp-badge :global(img) {
+    height: 56px;
+    width: auto;
+  }
+</style>

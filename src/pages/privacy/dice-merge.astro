@@ -1,0 +1,309 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadPrivacySource } from '../../lib/privacy';
+import scrollArt from '../../assets/scenes/privacy-scroll.png';
+import lanternArt from '../../assets/scenes/privacy-lantern.png';
+
+const { body, attribution, effectiveDate } = loadPrivacySource();
+---
+
+<BaseLayout
+  title="Privacy Policy — Dice Merge"
+  description="Privacy Policy for the Dice Merge mobile game by Emberwick Games."
+>
+  <header class="pp-banner">
+    <div class="pp-banner__art pp-banner__art--left" aria-hidden="true">
+      <Picture src={scrollArt} alt="" formats={['avif', 'webp']} priority />
+    </div>
+    <div class="pp-banner__panel">
+      <p class="eyebrow">Dice Merge</p>
+      <h1>Privacy Policy <span class="pp-banner__dash">—</span> Dice Merge</h1>
+      <p class="pp-banner__date">Effective as of <time datetime={effectiveDate}>{effectiveDate}</time></p>
+    </div>
+    <div class="pp-banner__art pp-banner__art--right" aria-hidden="true">
+      <Picture src={lanternArt} alt="" formats={['avif', 'webp']} priority />
+    </div>
+  </header>
+
+  <div class="container pp-wrap">
+    <nav class="pp-back" aria-label="Back links">
+      <a href="/">← Home</a>
+      <a href="/games/dice-merge">← Dice Merge</a>
+    </nav>
+
+    <article class="policy" set:html={body} />
+
+    <footer class="policy-attribution" set:html={attribution} />
+
+    <nav class="pp-back pp-back--end" aria-label="Back links (end of page)">
+      <a href="#main">↑ Back to top</a>
+      <a href="/games/dice-merge">← Dice Merge</a>
+      <a href="/">← Home</a>
+    </nav>
+  </div>
+</BaseLayout>
+
+<style>
+  .pp-banner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+    min-height: clamp(220px, 26vw, 340px);
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 50% 90% at 85% 70%, rgba(255, 129, 69, 0.18), rgba(255, 129, 69, 0) 70%),
+      radial-gradient(ellipse 50% 90% at 15% 80%, rgba(239, 199, 121, 0.08), rgba(239, 199, 121, 0) 70%),
+      linear-gradient(180deg, #120f12 0%, #1a1310 100%);
+    border-bottom: 1px solid rgba(239, 199, 121, 0.18);
+  }
+
+  .pp-banner__art {
+    align-self: stretch;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .pp-banner__art--left {
+    justify-content: flex-end;
+  }
+
+  .pp-banner__art :global(picture),
+  .pp-banner__art :global(img) {
+    height: 100%;
+    max-height: 340px;
+    width: auto;
+  }
+
+  .pp-banner__art :global(img) {
+    object-fit: cover;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 25%, #000 75%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 25%, #000 75%, transparent 100%);
+  }
+
+  .pp-banner__panel {
+    align-self: center;
+    margin: 2rem 0;
+    padding: clamp(1.25rem, 3vw, 2rem) clamp(1.5rem, 4vw, 2.75rem);
+    text-align: center;
+    background: rgba(12, 12, 16, 0.82);
+    border: 1px solid rgba(239, 199, 121, 0.45);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 4px rgba(12, 12, 16, 0.82), inset 0 0 0 5px rgba(239, 199, 121, 0.2);
+  }
+
+  .pp-banner__panel .eyebrow {
+    margin-bottom: 0.75rem;
+    color: var(--gold);
+  }
+
+  .pp-banner__panel h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(1rem, 0.8rem + 1.1vw, 1.6rem);
+    color: var(--cream);
+  }
+
+  .pp-banner__dash {
+    color: var(--ember);
+  }
+
+  .pp-banner__date {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .pp-wrap {
+    max-width: 780px;
+    padding-block: 2rem clamp(3rem, 8vw, 5rem);
+  }
+
+  .pp-back {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pp-back a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 500;
+  }
+
+  .pp-back--end {
+    margin: 2rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Policy body (verbatim HTML from privacy-source.html) */
+  .policy {
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--cream);
+    line-height: 1.75;
+  }
+
+  .policy :global(.lead) {
+    font-size: 1.08rem;
+    color: var(--cream);
+    max-width: none;
+  }
+
+  .policy :global(a) {
+    color: var(--gold);
+    overflow-wrap: anywhere;
+  }
+
+  .policy :global(a:hover) {
+    color: var(--ember);
+  }
+
+  .policy :global(nav.toc) {
+    margin: 1.5rem 0 1.75rem;
+    padding: 1.1rem 1.4rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--ember);
+    border-radius: 8px;
+  }
+
+  .policy :global(nav.toc strong) {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-family: var(--font-pixel);
+    font-weight: 400;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .policy :global(nav.toc ol) {
+    margin: 0;
+    padding-left: 1.4rem;
+    columns: 2;
+    column-gap: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .policy :global(nav.toc li) {
+    break-inside: avoid;
+    margin-bottom: 0.35rem;
+  }
+
+  .policy :global(section) {
+    padding: 1.5rem 0 0.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .policy :global(h2) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0 0 0.85rem;
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0;
+    color: var(--cream);
+  }
+
+  .policy :global(h2 .num) {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.9rem;
+    height: 1.9rem;
+    padding-inline: 0.3rem;
+    border-radius: 4px;
+    background: rgba(255, 129, 69, 0.15);
+    border: 1px solid rgba(255, 129, 69, 0.45);
+    color: var(--ember);
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    font-weight: 400;
+    transform: translateY(-0.1rem);
+  }
+
+  .policy :global(p) {
+    margin: 0 0 1rem;
+  }
+
+  .policy :global(ul) {
+    margin: 0 0 1rem;
+    padding-left: 1.4rem;
+  }
+
+  .policy :global(li) {
+    margin-bottom: 0.35rem;
+  }
+
+  .policy :global(li::marker) {
+    color: var(--ember);
+  }
+
+  .policy :global(.contact) {
+    padding: 1rem 1.25rem;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    margin-bottom: 1rem;
+  }
+
+  .policy-attribution {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .policy-attribution :global(a) {
+    color: var(--muted);
+  }
+
+  .policy-attribution :global(a:hover) {
+    color: var(--ember);
+  }
+
+  @media (max-width: 767px) {
+    .pp-banner {
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
+
+    .pp-banner__art--left {
+      position: absolute;
+      inset: 0 auto 0 -10%;
+      opacity: 0.35;
+    }
+
+    .pp-banner__art--right {
+      position: absolute;
+      inset: 0 -4% 0 auto;
+      opacity: 0.5;
+    }
+
+    .pp-banner__panel {
+      position: relative;
+      margin: 2.5rem var(--gutter);
+      background: rgba(12, 12, 16, 0.9);
+    }
+  }
+
+  @media (max-width: 559px) {
+    .policy :global(nav.toc ol) {
+      columns: 1;
+    }
+
+    .policy :global(h2) {
+      font-size: 1.1rem;
+    }
+  }
+</style>

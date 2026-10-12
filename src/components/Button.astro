@@ -1,0 +1,104 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  variant?: 'primary' | 'outline' | 'link';
+  arrow?: boolean;
+}
+
+const { href, variant = 'primary', arrow = true, class: className, ...rest } = Astro.props;
+const external = /^https?:\/\//.test(href);
+---
+
+<a
+  href={href}
+  class:list={['btn', `btn--${variant}`, className]}
+  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+  {...rest}
+>
+  <span><slot /></span>
+  {arrow && <span class="btn__arrow" aria-hidden="true">→</span>}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 48px;
+    padding: 0.75rem 1.4rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    border-radius: 6px;
+    transition:
+      background-color 0.25s var(--ease),
+      color 0.25s var(--ease),
+      border-color 0.25s var(--ease),
+      box-shadow 0.25s var(--ease),
+      transform 0.2s var(--ease);
+  }
+
+  .btn__arrow {
+    display: inline-block;
+    transition: transform 0.25s var(--ease);
+  }
+
+  .btn:hover .btn__arrow,
+  .btn:focus-visible .btn__arrow {
+    transform: translateX(4px);
+  }
+
+  .btn--primary {
+    background: var(--ember);
+    color: #1a0f08;
+    border: 2px solid var(--ember);
+    box-shadow: 0 0 0 rgba(255, 129, 69, 0);
+  }
+
+  .btn--primary:hover,
+  .btn--primary:focus-visible {
+    background: #ff935f;
+    border-color: #ff935f;
+    color: #1a0f08;
+    box-shadow: 0 6px 24px rgba(255, 129, 69, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .btn--outline {
+    background: rgba(16, 18, 26, 0.35);
+    color: var(--cream);
+    border: 2px solid rgba(241, 232, 213, 0.85);
+  }
+
+  .btn--outline:hover,
+  .btn--outline:focus-visible {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(239, 199, 121, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .btn--link {
+    min-height: 44px;
+    padding: 0.5rem 0;
+    color: var(--ember);
+    border-radius: 2px;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+  }
+
+  .btn--link:hover,
+  .btn--link:focus-visible {
+    color: var(--gold);
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+</style>

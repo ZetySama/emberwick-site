@@ -1,0 +1,52 @@
+---
+import { Image } from 'astro:assets';
+import mark from '../assets/brand/logo-mark.png';
+import wordmark from '../assets/brand/logo-wordmark.png';
+
+interface Props {
+  size?: 'sm' | 'md';
+}
+
+const { size = 'sm' } = Astro.props;
+const h = size === 'sm' ? 40 : 56;
+---
+
+<span class:list={['logo', `logo--${size}`]}>
+  <Image src={mark} alt="" height={h} densities={[1, 2]} class="logo__mark" loading="eager" />
+  <Image
+    src={wordmark}
+    alt="Emberwick Games"
+    height={Math.round(h * 0.62)}
+    densities={[1, 2]}
+    class="logo__word"
+    loading="eager"
+  />
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .logo img {
+    width: auto;
+  }
+
+  .logo--sm .logo__mark {
+    height: 40px;
+  }
+
+  .logo--sm .logo__word {
+    height: 25px;
+  }
+
+  .logo--md .logo__mark {
+    height: 56px;
+  }
+
+  .logo--md .logo__word {
+    height: 35px;
+  }
+</style>

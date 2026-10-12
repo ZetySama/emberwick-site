@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Button from '../components/Button.astro';
+import SocialIcon from '../components/icons/SocialIcon.astro';
+import PixelIcon from '../components/icons/PixelIcon.astro';
+import { lanternMap, palettes } from '../components/icons/pixel-maps';
+import { activeSocials, emailWrapHtml, site } from '../config/site';
+---
+
+<BaseLayout title="Contact" description={`Get in touch with Emberwick Games at ${site.email}.`}>
+  <PageIntro eyebrow="Contact" title="Get in touch">
+    <p>Questions about our games, feedback, support requests or business enquiries: email is the best way to reach us.</p>
+  </PageIntro>
+
+  <section class="section contact" aria-labelledby="email-title">
+    <div class="container">
+      <div class="contact__card" data-reveal>
+        <div class="contact__icon" aria-hidden="true">
+          <PixelIcon map={lanternMap} palette={palettes.lantern} size={64} />
+        </div>
+        <div class="contact__body">
+          <h2 id="email-title">Email</h2>
+          <p class="contact__address">
+            <a href={`mailto:${site.email}`} set:html={emailWrapHtml} />
+          </p>
+          <Button href={`mailto:${site.email}`}>Send an Email</Button>
+        </div>
+      </div>
+
+      {
+        activeSocials.length > 0 && (
+          <div class="contact__social" data-reveal>
+            <h2>Elsewhere</h2>
+            <ul>
+              {activeSocials.map((s) => (
+                <li>
+                  <a href={s.url} target="_blank" rel="noopener noreferrer">
+                    <SocialIcon name={s.key} />
+                    <span>{s.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      <p class="contact__note muted">
+        Looking for privacy information? Read the <a href="/privacy/dice-merge">Dice Merge Privacy Policy</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact__card {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 4vw, 2.5rem);
+    max-width: 46rem;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--ember);
+    border-radius: var(--radius);
+  }
+
+  .contact__icon {
+    display: grid;
+    place-items: center;
+    width: 104px;
+    height: 104px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 129, 69, 0.2), rgba(255, 129, 69, 0) 70%);
+  }
+
+  .contact__body h2 {
+    margin-bottom: 0.75rem;
+  }
+
+  .contact__address {
+    font-size: clamp(1.05rem, 1rem + 0.6vw, 1.35rem);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__social {
+    margin-top: 2.5rem;
+  }
+
+  .contact__social ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact__social a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--cream);
+    text-decoration: none;
+  }
+
+  .contact__note {
+    margin-top: 2.5rem;
+  }
+
+  @media (max-width: 559px) {
+    .contact__card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .contact__icon {
+      width: 80px;
+      height: 80px;
+    }
+  }
+</style>

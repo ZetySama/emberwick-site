@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import StudioIntro from '../components/StudioIntro.astro';
+import FeaturedGame from '../components/FeaturedGame.astro';
+import PhilosophyCards from '../components/PhilosophyCards.astro';
+import FinalCta from '../components/FinalCta.astro';
+import { games } from '../data/games';
+
+const featured = games[0];
+---
+
+<BaseLayout>
+  <Hero />
+  <StudioIntro />
+  {featured && <FeaturedGame game={featured} />}
+  <PhilosophyCards />
+  <FinalCta />
+</BaseLayout>

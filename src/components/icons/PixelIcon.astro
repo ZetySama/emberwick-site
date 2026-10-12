@@ -1,0 +1,42 @@
+---
+// Renders a pixel-art icon from a character map. Each character maps to a colour in `palette`;
+// '.' is transparent. Horizontal runs are merged into single rects to keep the SVG small.
+interface Props {
+  map: readonly string[];
+  palette: Record<string, string>;
+  size?: number;
+  label?: string;
+  class?: string;
+}
+
+const { map, palette, size = 64, label, class: className } = Astro.props;
+const width = Math.max(...map.map((row) => row.length));
+const height = map.length;
+
+const rects: { x: number; y: number; w: number; fill: string }[] = [];
+map.forEach((row, y) => {
+  let x = 0;
+  while (x < row.length) {
+    const ch = row[x];
+    if (ch === '.' || !palette[ch]) {
+      x++;
+      continue;
+    }
+    let w = 1;
+    while (row[x + w] === ch) w++;
+    rects.push({ x, y, w, fill: palette[ch] });
+    x += w;
+  }
+});
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox={`0 0 ${width} ${height}`}
+  shape-rendering="crispEdges"
+  {...label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' }}
+>
+  {rects.map((r) => <rect x={r.x} y={r.y} width={r.w} height="1" fill={r.fill} />)}
+</svg>

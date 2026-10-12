@@ -1,0 +1,83 @@
+// 16x16 pixel-art icon maps drawn in the moodboard's icon language.
+export const palettes = {
+  ember: { o: '#FF8145', y: '#EFC779', w: '#F1E8D5', r: '#B5452A' },
+  dice: { k: '#2A1D17', c: '#F1E8D5', s: '#C9B99A', p: '#3A2A22' },
+  lantern: { k: '#2A1D17', b: '#9A6A3C', y: '#EFC779', o: '#FF8145', w: '#FFF4DC' },
+  crown: { k: '#2A1D17', y: '#EFC779', g: '#B8893F', o: '#FF8145', r: '#C8433A' },
+} as const;
+
+export const emberMap = [
+  '........o.......',
+  '.......o........',
+  '.......oo....o..',
+  '......ooo.......',
+  '......oooo..o...',
+  '.....ooooo.oo...',
+  '....oooyooooo...',
+  '....ooyyyoooo...',
+  '...ooyyyyyoooo..',
+  '...ooywwyyyooo..',
+  '...ooywwwyyooo..',
+  '...rooywwwyoor..',
+  '....rooywyoor...',
+  '.....rrooooor...',
+  '......rrrrrr....',
+  '................',
+] as const;
+
+export const diceMap = [
+  '................',
+  '.kkkkkkkkkkkkkk.',
+  '.kccccccccccccsk',
+  '.kcppccccccppcsk',
+  '.kcppccccccppcsk',
+  '.kccccccccccccsk',
+  '.kccccccccccccsk',
+  '.kcccccppcccccsk',
+  '.kcccccppcccccsk',
+  '.kccccccccccccsk',
+  '.kccccccccccccsk',
+  '.kcppccccccppcsk',
+  '.kcppccccccppcsk',
+  '.kccccccccccccsk',
+  '.ksssssssssssssk',
+  '.kkkkkkkkkkkkkk.',
+] as const;
+
+export const lanternMap = [
+  '.......kk.......',
+  '......k..k......',
+  '......k..k......',
+  '.....kkkkkk.....',
+  '....kbbbbbbk....',
+  '...kbbbbbbbbk...',
+  '...kbyyyyyybk...',
+  '...kbyyooyybk...',
+  '...kbyowwoybk...',
+  '...kbyowwoybk...',
+  '...kbyyooyybk...',
+  '...kbyyyyyybk...',
+  '...kbbbbbbbbk...',
+  '....kbbbbbbk....',
+  '.....kkkkkk.....',
+  '................',
+] as const;
+
+export const crownMap = [
+  '................',
+  '................',
+  '................',
+  '.k.....kk.....k.',
+  'kyk...kyyk...kyk',
+  '.kyk..kyyk..kyk.',
+  '.kyyk.kyyk.kyyk.',
+  '.kyyykkyykkyyyk.',
+  '.kyyyyyyyyyyyyk.',
+  '.kyyoyyrryyoyyk.',
+  '.kyyyyyyyyyyyyk.',
+  '.kggggggggggggk.',
+  '.kkkkkkkkkkkkkk.',
+  '................',
+  '................',
+  '................',
+] as const;

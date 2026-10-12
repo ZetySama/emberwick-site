@@ -1,0 +1,112 @@
+---
+import { Image, Picture } from 'astro:assets';
+import Button from './Button.astro';
+import type { Game } from '../data/games';
+
+interface Props {
+  game: Game;
+}
+
+const { game } = Astro.props;
+const href = `/games/${game.slug}`;
+---
+
+<article class="game-card" data-reveal>
+  <a href={href} class="game-card__media frame" tabindex="-1" aria-hidden="true">
+    <Picture
+      src={game.feature}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[512, 1024]}
+      sizes="(min-width: 900px) 55vw, 100vw"
+    />
+  </a>
+  <div class="game-card__body">
+    <div class="game-card__title">
+      <Image src={game.icon} alt="" width={56} densities={[1, 2]} class="game-card__icon" />
+      <div>
+        <h2><a href={href}>{game.title}</a></h2>
+        <p class="game-card__platform">{game.platform}</p>
+      </div>
+    </div>
+    <p class="game-card__tagline">{game.tagline}</p>
+    <p class="muted">{game.summary}</p>
+    <Button href={href} variant="outline" aria-label={`View ${game.title}`}>View Game</Button>
+  </div>
+</article>
+
+<style>
+  .game-card {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: border-color 0.3s var(--ease);
+  }
+
+  .game-card:hover {
+    border-color: rgba(255, 129, 69, 0.4);
+  }
+
+  .game-card__media {
+    display: block;
+  }
+
+  .game-card__media :global(img) {
+    width: 100%;
+    aspect-ratio: 1024 / 500;
+    transition: transform 0.5s var(--ease);
+  }
+
+  .game-card:hover .game-card__media :global(img) {
+    transform: scale(1.02);
+  }
+
+  .game-card__title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .game-card__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .game-card h2 {
+    margin: 0 0 0.35rem;
+  }
+
+  .game-card h2 a {
+    color: var(--cream);
+    text-decoration: none;
+  }
+
+  .game-card h2 a:hover {
+    color: var(--ember);
+  }
+
+  .game-card__platform {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .game-card__tagline {
+    color: var(--cream);
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 899px) {
+    .game-card {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
