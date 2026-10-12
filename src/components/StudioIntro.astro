@@ -1,7 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import Button from './Button.astro';
-import studioScene from '../assets/scenes/studio.png';
+import studioScene from '../assets/scenes/studio.jpg';
 ---
 
 <section id="studio" class="section studio-intro" aria-labelledby="studio-intro-title">
@@ -9,7 +9,7 @@ import studioScene from '../assets/scenes/studio.png';
     <div class="studio-intro__art frame" data-reveal>
       <Picture
         src={studioScene}
-        alt="Pixel-art studio at night: a developer works on a laptop beside a crackling fireplace, a cat resting nearby."
+        alt="Pixel-art studio at night: a hooded developer works on a laptop by the window, a cat asleep on the chair, a fireplace crackling behind."
         formats={['avif', 'webp']}
         sizes="(min-width: 900px) 55vw, 100vw"
       />
@@ -40,7 +40,7 @@ import studioScene from '../assets/scenes/studio.png';
 
   .studio-intro__art :global(img) {
     width: 100%;
-    aspect-ratio: 492 / 212;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
   }
 
@@ -51,7 +51,7 @@ import studioScene from '../assets/scenes/studio.png';
 
     .studio-intro__art :global(img) {
       aspect-ratio: 4 / 3;
-      object-position: 38% 50%;
+      object-position: 70% 50%;
     }
   }
 </style>

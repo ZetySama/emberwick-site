@@ -15,14 +15,8 @@ await Promise.all(
   ),
 );
 
-// --- Scene placeholders cropped from the moodboard (inner panel area, labels and borders excluded) ---
+// --- 404 scene cropped from the moodboard (inner panel area, labels and borders excluded) ---
 const scenes = {
-  studio: { left: 17, top: 510, width: 492, height: 212 },
-  // Upper part of the footer panel only: the lower part contains a mock nav/logo baked into the image.
-  footer: { left: 16, top: 755, width: 685, height: 95 },
-  // Privacy banner: left (scroll + quill) and right (lantern) parts; the centre holds baked-in text.
-  'privacy-scroll': { left: 722, top: 771, width: 136, height: 148 },
-  'privacy-lantern': { left: 1027, top: 771, width: 85, height: 148 },
   // 404: lost traveller with a lantern (left part of the panel, away from the baked-in text).
   'lost-traveller': { left: 1134, top: 844, width: 110, height: 82 },
 };
@@ -30,8 +24,11 @@ for (const [name, region] of Object.entries(scenes)) {
   await sharp(MOODBOARD).extract(region).png().toFile(out('src/assets/scenes', `${name}.png`));
 }
 
-// Hero background: dedicated full scene supplied separately.
+// Dedicated full-size scenes supplied separately (copied as-is; astro:assets optimises them at build).
 await copyFile(path.join(REF, 'Main Page Backgorund.png'), out('src/assets/scenes', 'hero.png'));
+await copyFile(path.join(REF, 'Studio Section.jpg'), out('src/assets/scenes', 'studio.jpg'));
+await copyFile(path.join(REF, 'Footer backgorund.jpg'), out('src/assets/scenes', 'footer.jpg'));
+await copyFile(path.join(REF, 'Private Policy.jpg'), out('src/assets/scenes', 'privacy.jpg'));
 
 // --- Logo ---
 // Full framed logo: trim the transparent outer margin.

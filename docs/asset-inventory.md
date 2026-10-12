@@ -4,8 +4,11 @@ Her dosya açılıp içeriğine bakılarak tanımlandı; dosya adları esas alı
 
 | Dosya | İçerik | Boyut | Kullanım |
 |---|---|---|---|
-| `Emberwick Games Piksel Sanat Varlık Panosu.png` | **Moodboard**: logo, pixel ikonlar, sosyal ikonlar, buton örnekleri, fontlar, hero/studio/footer/privacy/404 sahneleri, oyun görselleri, Google Play rozeti, dokular | 1536×1024, 2.1 MB | Sanat yönetiminin ana referansı (renk, buton, tipografi, ikon dili). Klasörde sahnelerin ayrı dosyaları olmadığı için şu **yer tutucu kırpımlar** buradan alındı (gömülü yazı ve arayüz öğeleri kırpımın dışında bırakıldı): `scenes/studio.png` (492×212), `scenes/footer.png` (685×95, alttaki sahte menü/logo hariç), `scenes/privacy-scroll.png` (136×148) ve `scenes/privacy-lantern.png` (85×148) (ortadaki "Privacy Policy" yazısı hariç), `scenes/lost-traveller.png` (110×82, 404 sahnesinin yazısız sol kısmı) |
+| `Emberwick Games Piksel Sanat Varlık Panosu.png` | **Moodboard**: logo, pixel ikonlar, sosyal ikonlar, buton örnekleri, fontlar, hero/studio/footer/privacy/404 sahneleri, oyun görselleri, Google Play rozeti, dokular | 1536×1024, 2.1 MB | Sanat yönetiminin ana referansı (renk, buton, tipografi, ikon dili). Sahnelerin çoğu artık ayrı dosyalardan geliyor; moodboard'dan yalnızca 404 sahnesi için `scenes/lost-traveller.png` (110×82, yazısız sol kısım) kırpıldı. |
 | `Main Page Backgorund.png` | Ana sayfa sahnesi: kamp ateşi başında karakter, ağaç ve fener, göl kıyısında kale, dolunay | 1672×941, 2.5 MB | Hero arka planı (`scenes/hero.png`) ve OG görseli |
+| `Studio Section.jpg` | Çalışma odası: şömine, bayrak, kapüşonlu geliştirici laptopla, uyuyan kedi, ay ışıklı pencere | 2752×1536, 2.9 MB | Ana sayfa stüdyo tanıtımı ve `/studio` sayfası (`scenes/studio.jpg`) |
+| `Footer backgorund.jpg` | Gün batımı: uçurumda yolcu, dağlar, kale, alt kısmı karanlık | 2752×1536, 2.2 MB | Tüm sayfaların footer arka planı (`scenes/footer.jpg`) |
+| `Private Policy.jpg` | Kitaplık, tüy kalem, parşömen ve fener, ortası boş masa | 2752×1536, 2.4 MB | Gizlilik sayfası banner arka planı (`scenes/privacy.jpg`); başlık HTML ile üstüne bindirildi |
 | `Logo v2.png` | Emberwick Games logosu: çerçeveli, kor sembolü ve "EMBERWICK GAMES" yazısı, düz koyu zemin (#212429), dış kenarı şeffaf | 1024×1024, 426 KB | `brand/logo-full.png` (şeffaf kenarı kırpılmış tam logo; OG görselinde kullanıldı). `brand/logo-mark.png` ve `brand/logo-wordmark.png`: header ve footer'daki yatay logo için sembol ve yazı ayrı kırpıldı, düz zemin renk arındırmasıyla şeffaflaştırıldı (koyu ve açık zeminde halo kontrolü yapıldı). Favicon'lar (`favicon-32`, `favicon-192`, `apple-touch-icon`, `icon-512`) kor sembolünden üretildi |
 | `512x512.png` | Dice Merge uygulama simgesi (renkli pixel zarlar) | 512×512, 320 KB | Öne çıkan oyun bölümü, /games kartı, oyun detay başlığı |
 | `1024x500.png` | Dice Merge tanıtım görseli (oyunun kendi logosu gömülü) | 1024×500, 632 KB | Öne çıkan oyun kompozisyonu, /games kartı, oyun detay arka planı. Gömülü yazı oyunun logosu olduğu için olduğu gibi kullanıldı |
@@ -25,17 +28,13 @@ Her dosya açılıp içeriğine bakılarak tanımlandı; dosya adları esas alı
 - Moodboard'daki pixel ikonlar, sosyal ikonlar, dokular ve ek varlıklar: yaklaşık 40 px boyutunda, ayrı dosya değiller. Tasarım felsefesi ikonları (zar, fener, taç, kor) aynı dile uygun şekilde SVG olarak çizildi (`src/components/icons/pixel-maps.ts`). Sosyal ikonlar SVG olarak çizildi ve config dolu olmadığı için hiçbir yerde görünmüyor.
 - Moodboard'daki oyun ekran görüntüsü küçük kopyaları: aynı içeriğin daha keskin ayrı dosyaları kullanıldı.
 - Dosya adında "test", "placeholder" ya da "draft" geçen görsel yok.
-- 20 MB'ı aşan görsel yok (en büyüğü 2.1 MB).
+- 20 MB'ı aşan görsel yok (en büyüğü 2.9 MB).
 
 ## Daha yüksek çözünürlük gerekenler
 
-Aşağıdakilerin hepsi moodboard'dan kırpılmış yer tutucular. Ayrı, yüksek çözünürlüklü dosyalar eklenirse `scripts/crop-assets.mjs` içindeki ilgili satır değiştirilip `npm run assets` çalıştırılmalı.
+Hero, stüdyo, footer ve gizlilik banner'ı ayrı dosyalardan geliyor ve yeterli çözünürlükte. Kalanlar için ayrı dosya eklenirse `scripts/crop-assets.mjs` içindeki ilgili satır değiştirilip `npm run assets` çalıştırılmalı.
 
 | Varlık | Mevcut | Önerilen |
 |---|---|---|
-| Hero arka planı | 1672×941 (ayrı dosya; 1920 ekranda yaklaşık 1.15 kat büyütülüyor) | yeterli; 2560 px genişlik olursa daha da keskin olur |
-| Studio sahnesi | 492×212 | ≥ 1600×900 |
-| Footer sahnesi | 685×95 | ≥ 2560×400 |
-| Privacy banner (parşömen ve fener) | 136×148 ve 85×148 | ≥ 1920×480, yazısız tek parça |
-| 404 sahnesi | 110×82 | ≥ 1200×800, yazısız |
+| 404 sahnesi (moodboard kırpımı) | 110×82 | ≥ 1200×800, yazısız |
 | Google Play rozeti | yok | resmi dosya |

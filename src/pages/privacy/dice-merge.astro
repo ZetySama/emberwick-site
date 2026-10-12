@@ -2,8 +2,7 @@
 import { Picture } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { loadPrivacySource } from '../../lib/privacy';
-import scrollArt from '../../assets/scenes/privacy-scroll.png';
-import lanternArt from '../../assets/scenes/privacy-lantern.png';
+import bannerScene from '../../assets/scenes/privacy.jpg';
 
 const { body, attribution, effectiveDate } = loadPrivacySource();
 ---
@@ -13,16 +12,13 @@ const { body, attribution, effectiveDate } = loadPrivacySource();
   description="Privacy Policy for the Dice Merge mobile game by Emberwick Games."
 >
   <header class="pp-banner">
-    <div class="pp-banner__art pp-banner__art--left" aria-hidden="true">
-      <Picture src={scrollArt} alt="" formats={['avif', 'webp']} priority />
+    <div class="pp-banner__bg" aria-hidden="true">
+      <Picture src={bannerScene} alt="" formats={['avif', 'webp']} widths={[640, 1024, 1600, 2752]} sizes="100vw" priority />
     </div>
     <div class="pp-banner__panel">
       <p class="eyebrow">Dice Merge</p>
       <h1>Privacy Policy <span class="pp-banner__dash">—</span> Dice Merge</h1>
       <p class="pp-banner__date">Effective as of <time datetime={effectiveDate}>{effectiveDate}</time></p>
-    </div>
-    <div class="pp-banner__art pp-banner__art--right" aria-hidden="true">
-      <Picture src={lanternArt} alt="" formats={['avif', 'webp']} priority />
     </div>
   </header>
 
@@ -47,44 +43,43 @@ const { body, attribution, effectiveDate } = loadPrivacySource();
 <style>
   .pp-banner {
     position: relative;
+    isolation: isolate;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: end;
-    min-height: clamp(220px, 26vw, 340px);
+    place-items: center;
+    min-height: clamp(240px, 28vw, 400px);
+    padding: 2rem var(--gutter);
     overflow: hidden;
-    background:
-      radial-gradient(ellipse 50% 90% at 85% 70%, rgba(255, 129, 69, 0.18), rgba(255, 129, 69, 0) 70%),
-      radial-gradient(ellipse 50% 90% at 15% 80%, rgba(239, 199, 121, 0.08), rgba(239, 199, 121, 0) 70%),
-      linear-gradient(180deg, #120f12 0%, #1a1310 100%);
+    background: #120f12;
     border-bottom: 1px solid rgba(239, 199, 121, 0.18);
   }
 
-  .pp-banner__art {
-    align-self: stretch;
-    display: flex;
-    align-items: flex-end;
+  .pp-banner__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
   }
 
-  .pp-banner__art--left {
-    justify-content: flex-end;
-  }
-
-  .pp-banner__art :global(picture),
-  .pp-banner__art :global(img) {
+  .pp-banner__bg :global(picture),
+  .pp-banner__bg :global(img) {
+    width: 100%;
     height: 100%;
-    max-height: 340px;
-    width: auto;
   }
 
-  .pp-banner__art :global(img) {
+  .pp-banner__bg :global(img) {
     object-fit: cover;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 25%, #000 75%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 25%, #000 75%, transparent 100%);
+    object-position: 50% 62%;
+    image-rendering: auto;
+  }
+
+  .pp-banner__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, var(--bg) 0%, rgba(16, 18, 26, 0) 22%);
   }
 
   .pp-banner__panel {
-    align-self: center;
-    margin: 2rem 0;
+    position: relative;
     padding: clamp(1.25rem, 3vw, 2rem) clamp(1.5rem, 4vw, 2.75rem);
     text-align: center;
     background: rgba(12, 12, 16, 0.82);
@@ -273,26 +268,11 @@ const { body, attribution, effectiveDate } = loadPrivacySource();
   }
 
   @media (max-width: 767px) {
-    .pp-banner {
-      grid-template-columns: 1fr;
-      align-items: center;
-    }
-
-    .pp-banner__art--left {
-      position: absolute;
-      inset: 0 auto 0 -10%;
-      opacity: 0.35;
-    }
-
-    .pp-banner__art--right {
-      position: absolute;
-      inset: 0 -4% 0 auto;
-      opacity: 0.5;
+    .pp-banner__bg :global(img) {
+      object-position: 50% 70%;
     }
 
     .pp-banner__panel {
-      position: relative;
-      margin: 2.5rem var(--gutter);
       background: rgba(12, 12, 16, 0.9);
     }
   }
