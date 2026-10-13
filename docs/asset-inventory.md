@@ -20,19 +20,6 @@ Her dosya açılıp içeriğine bakılarak tanımlandı; dosya adları esas alı
 | `Profile panel.png` | Player Profile: "Emberwickgames", Global Rank 7, Best Score 44069, avatar | 945×1906, 1.2 MB | Galeri (yalnızca sahibin kendi hesabı görünüyor) |
 | `LeaderBoard.png` | Liderlik tablosu: diğer oyuncuların takma adları ve avatarları | 945×1916, 1.2 MB | **Kullanılmadı: kişisel veri içeriyor** (başka oyuncuların takma adları ve avatarları) |
 
-## Mascot animasyonları (`public/media/mascots/`)
-
-Kaynak: AI-generated mascot, Google Flow. Orijinal GIF'ler `Gifs/` klasöründe (480×270, 16 fps, 10 sn, ~8 MB; sayfaya konmadı). Düz olmayan (vinyetli) krem zemin nedeniyle colorkey ile saydamlık denenmedi; klipler krem çerçeveli yuvarlak köşeli kart içinde gösterilir. Yeniden üretmek için: `bash scripts/encode-mascots.sh` (ffmpeg gerekir). Bileşen: `src/components/MascotLoop.astro`.
-
-| Dosya | Boyut | Kullanım |
-|---|---|---|
-| `hero-greeting.mp4` / `.webm` | 349 KB / 425 KB | Dice Merge sayfası hero'su, sağ sütun (Pip + Pop el sallayıp zıplıyor) |
-| `hero-greeting-poster.webp` | 19 KB | Hero klibinin ilk karesi; `prefers-reduced-motion` durumunda gösterilir |
-| `sleeping-dice.mp4` / `.webm` | 252 KB / 314 KB | Dice Merge sayfası sonu, "goodnight" kartı |
-| `sleeping-dice-poster.webp` | 18 KB | Uyuyan zarlar klibinin ilk karesi |
-
-Bir tarayıcı yalnızca bir formatı indirir (WebM, yoksa MP4). Tüm yeni medya toplamı ≈ 1.38 MB. Sayfada her iki kartın altında "AI-generated mascot art" notu var.
-
 ## Kullanılmayan öğeler ve nedenleri
 
 - `LeaderBoard.png`: kişisel veri içeriyor (yukarıda).

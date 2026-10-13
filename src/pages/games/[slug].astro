@@ -2,7 +2,6 @@
 import { Image, Picture } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/Button.astro';
-import MascotLoop from '../../components/MascotLoop.astro';
 import Gallery from '../../components/Gallery.astro';
 import GooglePlayBadge from '../../components/GooglePlayBadge.astro';
 import PixelIcon from '../../components/icons/PixelIcon.astro';
@@ -32,26 +31,18 @@ const { game } = Astro.props;
         <span aria-hidden="true">/</span>
         <span aria-current="page">{game.title}</span>
       </nav>
-      <div class="game-hero__grid">
-        <div class="game-hero__copy">
-          <div class="game-hero__head">
-            <Image src={game.icon} alt={`${game.title} app icon`} width={112} densities={[1, 2]} class="game-hero__icon" priority />
-            <div>
-              <p class="eyebrow">{game.platform}</p>
-              <h1 id="game-title">{game.title}</h1>
-            </div>
-          </div>
-          <p class="game-hero__tagline">{game.tagline}</p>
-          <p class="game-hero__summary">{game.summary}</p>
-          <div class="game-hero__actions">
-            <GooglePlayBadge url={game.googlePlayUrl} />
-            <Button href="#gallery" variant="link" arrow={false}>See screenshots ↓</Button>
-          </div>
+      <div class="game-hero__head">
+        <Image src={game.icon} alt={`${game.title} app icon`} width={112} densities={[1, 2]} class="game-hero__icon" priority />
+        <div>
+          <p class="eyebrow">{game.platform}</p>
+          <h1 id="game-title">{game.title}</h1>
         </div>
-        <figure class="game-hero__mascot">
-          <MascotLoop name="hero-greeting" alt="Pip, a green dice, and Pop, a purple dice, waving hello" />
-          <figcaption>Pip &amp; Pop · AI-generated mascot art</figcaption>
-        </figure>
+      </div>
+      <p class="game-hero__tagline">{game.tagline}</p>
+      <p class="game-hero__summary">{game.summary}</p>
+      <div class="game-hero__actions">
+        <GooglePlayBadge url={game.googlePlayUrl} />
+        <Button href="#gallery" variant="link" arrow={false}>See screenshots ↓</Button>
       </div>
     </div>
   </section>
@@ -93,19 +84,6 @@ const { game } = Astro.props;
       </aside>
     </div>
   </section>
-
-  {
-    game.slug === 'dice-merge' && (
-      <section class="section goodnight" aria-label="Goodnight from Pip and Pop">
-        <div class="container">
-          <figure class="goodnight__card" data-reveal>
-            <MascotLoop name="sleeping-dice" alt="Pip and Pop, the two dice, asleep side by side" />
-            <figcaption>Pip &amp; Pop say goodnight · AI-generated mascot art</figcaption>
-          </figure>
-        </div>
-      </section>
-    )
-  }
 </BaseLayout>
 
 <style>
@@ -205,66 +183,6 @@ const { game } = Astro.props;
     align-items: center;
     gap: 1rem 1.5rem;
     margin-top: 1.5rem;
-  }
-
-  .game-hero__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: center;
-  }
-
-  .game-hero__mascot,
-  .goodnight__card {
-    margin: 0;
-  }
-
-  .game-hero__mascot figcaption,
-  .goodnight__card figcaption {
-    margin-top: 0.75rem;
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-align: center;
-  }
-
-  .game-hero__mascot :global(.mascot-loop) {
-    transform: rotate(1.5deg);
-  }
-
-  .goodnight {
-    padding-top: 0;
-  }
-
-  .goodnight__card {
-    width: min(20rem, 100%);
-    margin-inline: auto;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .game-hero__mascot {
-      animation: mascot-in 0.8s var(--ease) 0.2s both;
-    }
-  }
-
-  @keyframes mascot-in {
-    from {
-      opacity: 0;
-      transform: translateX(24px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @media (max-width: 899px) {
-    .game-hero__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .game-hero__mascot {
-      width: min(22rem, 100%);
-    }
   }
 
   .gallery-section h2 {
