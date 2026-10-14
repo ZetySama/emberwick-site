@@ -1,7 +1,7 @@
 // Single source of truth for site-wide settings.
 
-// Cloudflare'deki gerçek adres netleşince değiştir (ör. https://<proje-adı>.pages.dev).
-export const SITE_URL = 'https://emberwick.pages.dev';
+// Cloudflare Pages adresi. Özel alan adı bağlanınca burayı onunla değiştir.
+export const SITE_URL = 'https://emberwickgames.pages.dev';
 
 export interface SocialLinks {
   discord: string;
