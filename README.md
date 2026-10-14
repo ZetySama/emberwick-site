@@ -24,6 +24,16 @@ The Dice Merge privacy policy is read verbatim from `privacy-source.html` at bui
 
 See `docs/asset-inventory.md` for where each reference image is used.
 
-## Cloudflare Pages
+## Deployment
 
-Build command `npm run build`, output directory `dist`, environment variable `NODE_VERSION=22`.
+The live site is https://zetysama.github.io (`*.pages.dev` is unreachable from many networks in Turkey).
+`git push` sends `main` to both `ZetySama/emberwick-site` and `ZetySama/zetysama.github.io`; the latter builds and
+publishes via `.github/workflows/deploy-pages.yml`. To set up the second push target on a fresh clone:
+
+```bash
+git remote set-url --add --push origin https://github.com/ZetySama/emberwick-site.git
+git remote set-url --add --push origin https://github.com/ZetySama/zetysama.github.io.git
+```
+
+The Cloudflare Pages copy still builds from `emberwick-site`: build command `npm run build`, output directory `dist`,
+environment variable `NODE_VERSION=22`.

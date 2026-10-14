@@ -1,7 +1,7 @@
 // Single source of truth for site-wide settings.
 
-// Cloudflare Pages adresi. Özel alan adı bağlanınca burayı onunla değiştir.
-export const SITE_URL = 'https://emberwickgames.pages.dev';
+// Canlı adres (GitHub Pages). Özel alan adı bağlanınca burayı onunla değiştir.
+export const SITE_URL = 'https://zetysama.github.io';
 
 export interface SocialLinks {
   discord: string;
