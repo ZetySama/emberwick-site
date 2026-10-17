@@ -1,12 +1,14 @@
 ---
 // Dice Merge ad landing page. Shared by /dice-merge/ and the per-channel pages; only utm_source differs.
+// All motion is CSS-only (no scripts) and switches off under prefers-reduced-motion.
 import { Image, getImage } from 'astro:assets';
 import LandingLayout from '../layouts/LandingLayout.astro';
 import Logo from './Logo.astro';
+import PixelIcon from './icons/PixelIcon.astro';
+import { dieFaceMap, diePalettes } from './icons/dice-faces';
 import { getGame } from '../data/games';
 import { playUrl } from '../data/landing';
 import gameplay1 from '../assets/games/dice-merge/gameplay-1.jpeg';
-import gameplay2 from '../assets/games/dice-merge/gameplay-2.jpeg';
 import jokerBomb from '../assets/games/dice-merge/joker-bomb.jpeg';
 import jokerClear from '../assets/games/dice-merge/joker-clear-value.jpeg';
 
@@ -24,18 +26,38 @@ const description = `${tagline} Emberwick Games'in piksel sanat bulmaca oyunu Di
 
 const ogImage = await getImage({ src: game.feature, format: 'jpg', width: 1024 });
 
-const shots = [
-  { src: gameplay1, alt: 'Dice Merge oyun ekranı: renkli zarlarla dolu 5x5 ahşap tahta ve üstte skor.', caption: '5x5 tahtada birleştir' },
-  { src: jokerBomb, alt: 'Bomba jokeri kartı.', caption: 'Bomba jokeri' },
-  { src: jokerClear, alt: 'Değer Temizleme jokeri kartı.', caption: 'Değer Temizleme jokeri' },
-  { src: gameplay2, alt: 'Daha yüksek skorlu bir Dice Merge oyunu ve tahtanın altında sıradaki zar.', caption: 'Rekorunu kovala' },
+const phones = [
+  { src: jokerBomb, alt: 'Bomba jokeri kartı.', pos: 'left' },
+  { src: gameplay1, alt: 'Dice Merge oyun ekranı: renkli zarlarla dolu 5x5 ahşap tahta ve üstte skor.', pos: 'center' },
+  { src: jokerClear, alt: 'Değer Temizleme jokeri kartı.', pos: 'right' },
+] as const;
+
+// Dice orbiting the app icon: value, position and timing.
+const orbit = [
+  { v: 2, x: '-88px', y: '-6px', d: '0s' },
+  { v: 5, x: '82px', y: '-22px', d: '-1.2s' },
+  { v: 3, x: '-70px', y: '58px', d: '-2.1s' },
+  { v: 6, x: '76px', y: '52px', d: '-0.6s' },
+] as const;
+
+// Rising ember sparks behind the hero (left %, size px, duration s, delay s).
+const sparks = [
+  [6, 4, 7, 0], [14, 3, 9, -3], [22, 5, 8, -5], [31, 3, 10, -1], [40, 4, 7.5, -6],
+  [48, 3, 9.5, -2], [57, 5, 8.5, -4], [66, 3, 7, -7], [74, 4, 10, -3.5], [83, 3, 8, -1.5],
+  [91, 5, 9, -5.5], [96, 3, 7.5, -2.5],
 ];
 
+const chips = [
+  { v: 1, label: '5×5 tahta' },
+  { v: 5, label: 'Jokerler' },
+  { v: 4, label: 'Liderlik tablosu' },
+] as const;
+
 const steps = [
-  { title: 'Zarları yerleştir', text: 'Sıradaki zarı 5x5 tahtada istediğin kareye koy.' },
-  { title: 'Aynı zarları yan yana getir', text: 'Aynı değerdeki zarlar birleşir ve bir üst değere yükselir.' },
-  { title: 'Zincirle ve rekor kır', text: 'Birleşmeleri art arda bağla, kombo yap ve en iyi skorunu geç.' },
-];
+  { v: 1, title: 'Zarları yerleştir', text: 'Sıradaki zarı 5x5 tahtada istediğin kareye koy.' },
+  { v: 2, title: 'Aynı zarları yan yana getir', text: 'Aynı değerdeki zarlar birleşir ve bir üst değere yükselir.' },
+  { v: 3, title: 'Zincirle ve rekor kır', text: 'Birleşmeleri art arda bağla, kombo yap ve en iyi skorunu geç.' },
+] as const;
 ---
 
 <LandingLayout
@@ -50,37 +72,96 @@ const steps = [
     <a href="/" class="bar__home" aria-label="Emberwick Games ana sayfa"><Logo /></a>
   </header>
 
-  <main class="landing">
+  <main>
     <section class="hero">
-      <Image src={game.icon} alt="Dice Merge uygulama ikonu" width={88} densities={[1, 2]} class="hero__icon" priority />
-      <h1>{title}</h1>
-      <p class="hero__tagline">{tagline}</p>
-      <a class="cta" href={href}>Google Play'den indir <span aria-hidden="true">→</span></a>
-      <p class="hero__note">Android · Emberwick Games</p>
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="sparks" aria-hidden="true">
+        {sparks.map(([x, s, d, delay]) => <span style={`--x:${x}%;--s:${s}px;--d:${d}s;--delay:${delay}s`} />)}
+      </div>
+
+      <div class="wrap hero__inner">
+        <div class="art">
+          <div class="art__ring" aria-hidden="true"></div>
+          <div class="art__icon">
+            <Image src={game.icon} alt="Dice Merge uygulama ikonu" width={96} densities={[1, 2]} priority />
+          </div>
+          {
+            orbit.map((o) => (
+              <div class="orbit" style={`--ox:${o.x};--oy:${o.y};--od:${o.d}`}>
+                <PixelIcon map={dieFaceMap(o.v)} palette={diePalettes[o.v]} size={30} />
+              </div>
+            ))
+          }
+        </div>
+
+        <p class="eyebrow enter" style="--i:1">EMBERWICK GAMES SUNAR</p>
+        <h1 class="enter" style="--i:2">
+          <span class="h1__name">Dice Merge:</span>
+          <span class="h1__shine">Pixel Puzzle</span>
+        </h1>
+        <p class="hero__tagline enter" style="--i:3">{tagline}</p>
+
+        <div class="enter" style="--i:4">
+          <a class="cta" href={href}>
+            <svg class="cta__icon" viewBox="0 0 8 8" width="20" height="20" shape-rendering="crispEdges" aria-hidden="true">
+              <path d="M3 0h2v4h2v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h2z M0 7h8v1h-8z" fill="currentColor"></path>
+            </svg>
+            <span>Google Play'den indir</span>
+          </a>
+          <p class="hero__note">Android için</p>
+        </div>
+
+        <ul class="chips enter" style="--i:5">
+          {
+            chips.map((c) => (
+              <li>
+                <PixelIcon map={dieFaceMap(c.v)} palette={diePalettes[c.v]} size={16} />
+                {c.label}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </section>
 
-    <section class="shots" aria-label="Oyundan ekran görüntüleri">
-      <ul class="shots__list">
-        {
-          shots.map((s) => (
-            <li>
-              <figure>
-                <Image src={s.src} alt={s.alt} widths={[180, 360]} sizes="180px" class="frame" />
-                <figcaption>{s.caption}</figcaption>
-              </figure>
-            </li>
-          ))
-        }
-      </ul>
+    <section class="phones" aria-label="Oyundan ekran görüntüleri">
+      {
+        phones.map((p) => (
+          <div class:list={['phone', `phone--${p.pos}`]}>
+            <div class="phone__float">
+              <Image
+                src={p.src}
+                alt={p.alt}
+                widths={p.pos === 'center' ? [160, 320] : [130, 260]}
+                sizes={p.pos === 'center' ? '160px' : '130px'}
+                class="frame"
+                loading="eager"
+              />
+            </div>
+          </div>
+        ))
+      }
     </section>
 
-    <section class="how">
-      <h2>Nasıl oynanır</h2>
-      <ol class="how__steps">
+    <section class="how wrap">
+      <h2 class="reveal">Nasıl oynanır</h2>
+
+      <div class="demo reveal" role="img" aria-label="Animasyon: iki adet 2'lik zar birleşip 3'lük zar oluyor.">
+        <div class="demo__stage" aria-hidden="true">
+          <span class="demo__die demo__die--a"><PixelIcon map={dieFaceMap(2)} palette={diePalettes[2]} size={52} /></span>
+          <span class="demo__die demo__die--b"><PixelIcon map={dieFaceMap(2)} palette={diePalettes[2]} size={52} /></span>
+          <span class="demo__burst"></span>
+          <span class="demo__die demo__die--c"><PixelIcon map={dieFaceMap(3)} palette={diePalettes[3]} size={52} /></span>
+          <span class="demo__plus">+1</span>
+        </div>
+        <p class="demo__caption">Aynı zarlar birleşir, değer yükselir!</p>
+      </div>
+
+      <ol class="steps">
         {
-          steps.map((step, i) => (
-            <li>
-              <span class="how__num" aria-hidden="true">{i + 1}</span>
+          steps.map((step) => (
+            <li class="reveal">
+              <PixelIcon map={dieFaceMap(step.v)} palette={diePalettes[step.v]} size={36} class="steps__die" />
               <div>
                 <h3>{step.title}</h3>
                 <p>{step.text}</p>
@@ -89,12 +170,21 @@ const steps = [
           ))
         }
       </ol>
-      <p class="how__jokers">Tahta dolmaya başladığında Bomba ve Değer Temizleme jokerleri oyunu tersine çevirebilir.</p>
+      <p class="how__jokers reveal">Tahta dolmaya başladığında Bomba ve Değer Temizleme jokerleri oyunu tersine çevirebilir.</p>
     </section>
 
-    <section class="final">
-      <h2>Hemen oynamaya başla</h2>
-      <a class="cta" href={href}>Google Play'den indir <span aria-hidden="true">→</span></a>
+    <section class="final wrap">
+      <div class="final__card reveal">
+        <Image src={game.icon} alt="" width={64} densities={[1, 2]} class="final__icon" />
+        <h2>Rekor seni bekliyor</h2>
+        <p>Tahtayı doldurmadan zincirleri kur, jokerleri doğru anda kullan.</p>
+        <a class="cta" href={href}>
+          <svg class="cta__icon" viewBox="0 0 8 8" width="20" height="20" shape-rendering="crispEdges" aria-hidden="true">
+            <path d="M3 0h2v4h2v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h2z M0 7h8v1h-8z" fill="currentColor"></path>
+          </svg>
+          <span>Google Play'den indir</span>
+        </a>
+      </div>
     </section>
   </main>
 
@@ -106,10 +196,30 @@ const steps = [
     </nav>
     <p>© {new Date().getFullYear()} Emberwick Games</p>
   </footer>
+
+  <div class="sticky" aria-hidden="true">
+    <a class="sticky__btn" href={href} tabindex="-1">
+      <Image src={game.icon} alt="" width={32} densities={[1, 2]} />
+      <span>Dice Merge'ü indir</span>
+    </a>
+  </div>
 </LandingLayout>
 
 <style>
+  @property --angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+  }
+
+  .wrap {
+    width: min(100% - 2 * var(--gutter), 560px);
+    margin-inline: auto;
+  }
+
   .bar {
+    position: relative;
+    z-index: 2;
     display: flex;
     justify-content: center;
     padding: 0.85rem var(--gutter);
@@ -120,135 +230,363 @@ const steps = [
     display: inline-flex;
   }
 
-  .landing {
-    width: min(100% - 2 * var(--gutter), 560px);
-    margin-inline: auto;
+  main {
     text-align: center;
   }
 
+  /* ---------- Hero ---------- */
+
   .hero {
-    padding-block: 1.75rem 1.5rem;
+    position: relative;
+    overflow: clip;
+    padding-block: 1.6rem 1.25rem;
   }
 
-  .hero :global(.hero__icon) {
-    width: 88px;
-    height: 88px;
-    margin: 0 auto 1.1rem;
-    border-radius: 20px;
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero__glow {
+    position: absolute;
+    inset: -20% 0 auto;
+    height: 420px;
+    background:
+      radial-gradient(closest-side at 50% 45%, rgba(255, 129, 69, 0.32), transparent 70%),
+      radial-gradient(closest-side at 50% 60%, rgba(239, 199, 121, 0.12), transparent 80%);
+    animation: glow 5s ease-in-out infinite;
+  }
+
+  .sparks span {
+    position: absolute;
+    bottom: -10px;
+    left: var(--x);
+    width: var(--s);
+    height: var(--s);
+    background: var(--ember);
+    box-shadow: 0 0 6px rgba(255, 129, 69, 0.8);
+    opacity: 0;
+    animation: rise var(--d) linear var(--delay) infinite;
+  }
+
+  .sparks span:nth-child(3n) {
+    background: var(--gold);
+  }
+
+  .art {
+    position: relative;
+    width: 96px;
+    height: 112px;
+    margin: 0 auto 0.6rem;
+  }
+
+  .art__ring {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 116px;
+    height: 116px;
+    border-radius: 30px;
+    border: 2px solid rgba(255, 129, 69, 0.55);
+    animation: ring 2.6s ease-out infinite;
+  }
+
+  .art__icon {
+    position: relative;
+    animation: bob 3.2s ease-in-out infinite;
+  }
+
+  .art__icon :global(img) {
+    display: block;
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
     image-rendering: pixelated;
-    box-shadow: 0 10px 30px rgba(255, 129, 69, 0.18);
+    box-shadow:
+      0 0 0 3px rgba(239, 199, 121, 0.35),
+      0 12px 32px rgba(255, 129, 69, 0.35);
+  }
+
+  .orbit {
+    position: absolute;
+    top: 33px;
+    left: 33px;
+    transform: translate(var(--ox), var(--oy));
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
+  }
+
+  .orbit :global(svg) {
+    display: block;
+    animation: hop 2.8s steps(1, end) var(--od) infinite, drift 2.8s ease-in-out var(--od) infinite;
+  }
+
+  .eyebrow {
+    margin-bottom: 0.7rem;
+    color: var(--gold);
+    /* Text is already upper case; Turkish casing would turn the brand's i into İ. */
+    text-transform: none;
   }
 
   h1 {
-    font-size: clamp(1.15rem, 0.9rem + 1.6vw, 1.75rem);
-    margin-bottom: 0.85rem;
+    font-size: clamp(1.2rem, 0.95rem + 1.6vw, 1.85rem);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 span {
+    display: block;
+  }
+
+  .h1__shine {
+    background: linear-gradient(100deg, var(--ember) 0%, var(--gold) 35%, #fff4dc 50%, var(--gold) 65%, var(--ember) 100%);
+    background-size: 250% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 4s ease-in-out 1s infinite;
   }
 
   .hero__tagline {
+    max-width: 30ch;
+    margin: 0 auto 1.3rem;
     font-size: 1.125rem;
     color: var(--cream);
-    margin-bottom: 1.4rem;
   }
 
+  /* ---------- Buttons ---------- */
+
   .cta {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
+    gap: 0.65rem;
     width: 100%;
     max-width: 360px;
-    min-height: 58px;
+    min-height: 60px;
     margin-inline: auto;
     padding: 0.9rem 1.4rem;
-    background: var(--ember);
-    border: 2px solid var(--ember);
-    border-radius: 8px;
+    background: linear-gradient(180deg, #ff9563, var(--ember) 55%, var(--ember-deep));
+    border: 2px solid #ffb48d;
+    border-radius: 10px;
     color: #1a0f08;
     font-size: 1.15rem;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.2;
     text-decoration: none;
-    box-shadow: 0 8px 24px rgba(255, 129, 69, 0.28);
-    transition:
-      background-color 0.25s var(--ease),
-      transform 0.2s var(--ease);
+    box-shadow:
+      0 4px 0 #a8461c,
+      0 10px 28px rgba(255, 129, 69, 0.35);
+    animation: breathe 2.4s ease-in-out infinite;
+    transition: transform 0.12s var(--ease), box-shadow 0.12s var(--ease);
+  }
+
+  .cta::after {
+    content: '';
+    position: absolute;
+    inset: -20% auto -20% -60%;
+    width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-20deg);
+    animation: sweep 3.2s ease-in-out 1.2s infinite;
   }
 
   .cta:hover,
   .cta:focus-visible {
-    background: var(--ember-deep);
-    border-color: var(--ember-deep);
     color: #1a0f08;
-    transform: translateY(-1px);
+    filter: brightness(1.06);
+  }
+
+  .cta:active {
+    transform: translateY(3px);
+    box-shadow:
+      0 1px 0 #a8461c,
+      0 6px 18px rgba(255, 129, 69, 0.3);
+  }
+
+  .cta__icon {
+    flex: 0 0 auto;
+    animation: nudge 1.6s ease-in-out infinite;
   }
 
   .hero__note {
-    margin: 0.85rem 0 0;
+    margin: 0.7rem 0 0;
     font-size: 0.875rem;
     color: var(--muted);
   }
 
-  .shots {
-    margin-inline: calc(-1 * var(--gutter));
-  }
-
-  .shots__list {
+  .chips {
     display: flex;
-    gap: 0.9rem;
-    margin: 0;
-    padding: 0.5rem var(--gutter) 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
     list-style: none;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
   }
 
-  .shots__list li {
-    flex: 0 0 auto;
-    scroll-snap-align: center;
+  .chips li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.65rem 0.3rem 0.45rem;
+    background: rgba(25, 28, 38, 0.85);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    color: var(--cream);
   }
 
-  @media (min-width: 640px) {
-    .shots__list {
-      justify-content: center;
-    }
+  /* ---------- Phone fan ---------- */
+
+  .phones {
+    position: relative;
+    height: 380px;
+    margin-top: 0.5rem;
+    overflow-x: clip;
   }
 
-  figure {
-    margin: 0;
+  .phone {
+    position: absolute;
+    top: 30px;
+    left: 50%;
   }
 
-  figure :global(img) {
-    width: 150px;
+  .phone :global(img) {
+    display: block;
+    width: 130px;
     height: auto;
     aspect-ratio: 945 / 2048;
     object-fit: cover;
+    border-radius: 14px;
   }
 
-  figcaption {
-    margin-top: 0.6rem;
-    font-size: 0.8125rem;
-    color: var(--muted);
+  .phone--center {
+    top: 0;
+    z-index: 2;
+    transform: translateX(-50%);
   }
+
+  .phone--center :global(img) {
+    width: 160px;
+    box-shadow:
+      0 0 0 4px var(--bg),
+      0 0 0 6px rgba(255, 129, 69, 0.45),
+      0 24px 48px rgba(0, 0, 0, 0.55),
+      0 0 60px rgba(255, 129, 69, 0.18);
+  }
+
+  .phone--left {
+    transform: translateX(-128%) rotate(-9deg);
+  }
+
+  .phone--right {
+    transform: translateX(28%) rotate(9deg);
+  }
+
+  .phone--left :global(img),
+  .phone--right :global(img) {
+    filter: brightness(0.82);
+  }
+
+  .phone__float {
+    animation: float 4.5s ease-in-out infinite;
+  }
+
+  .phone--left .phone__float {
+    animation-delay: -1.5s;
+  }
+
+  .phone--right .phone__float {
+    animation-delay: -3s;
+  }
+
+  /* ---------- How to play ---------- */
 
   .how {
-    padding-block: 2rem 1rem;
-    text-align: left;
+    padding-block: 1.5rem 1rem;
   }
 
-  .how h2 {
-    text-align: center;
+  .demo {
+    margin: 0 auto 1.5rem;
+    padding: 1.1rem 1rem 0.9rem;
+    background: linear-gradient(180deg, rgba(49, 93, 88, 0.22), rgba(25, 28, 38, 0.9));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
   }
 
-  .how__steps {
+  .demo__stage {
+    position: relative;
+    height: 76px;
+  }
+
+  .demo__die,
+  .demo__burst,
+  .demo__plus {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    margin-left: -26px;
+  }
+
+  .demo__die :global(svg) {
+    display: block;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
+  }
+
+  .demo__die--a {
+    transform: translateX(-80px);
+    animation: merge-a 3.6s ease-in-out infinite;
+  }
+
+  .demo__die--b {
+    transform: translateX(80px);
+    animation: merge-b 3.6s ease-in-out infinite;
+  }
+
+  .demo__die--c {
+    opacity: 0;
+    animation: merge-c 3.6s ease-in-out infinite;
+  }
+
+  .demo__burst {
+    width: 52px;
+    height: 52px;
+    border: 3px solid var(--gold);
+    opacity: 0;
+    animation: burst 3.6s ease-out infinite;
+  }
+
+  .demo__plus {
+    top: 0;
+    margin-left: 34px;
+    font-family: var(--font-pixel);
+    font-size: 0.8rem;
+    color: var(--gold);
+    opacity: 0;
+    animation: plus 3.6s ease-out infinite;
+  }
+
+  .demo__caption {
+    margin: 0.4rem 0 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  .steps {
     display: grid;
     gap: 0.85rem;
     margin: 0 0 1.25rem;
     padding: 0;
     list-style: none;
+    text-align: left;
   }
 
-  .how__steps li {
+  .steps li {
     display: flex;
     gap: 1rem;
     align-items: flex-start;
@@ -258,17 +596,9 @@ const steps = [
     border-radius: var(--radius);
   }
 
-  .how__num {
+  .steps li :global(.steps__die) {
     flex: 0 0 auto;
-    display: grid;
-    place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 6px;
-    background: rgba(255, 129, 69, 0.14);
-    color: var(--ember);
-    font-family: var(--font-pixel);
-    font-size: 0.85rem;
+    margin-top: 0.1rem;
   }
 
   .how h3 {
@@ -276,20 +606,62 @@ const steps = [
     color: var(--gold);
   }
 
-  .how__steps p,
+  .steps p,
   .how__jokers {
     margin: 0;
     color: var(--muted);
     font-size: 1rem;
   }
 
-  .how__jokers {
-    text-align: center;
-  }
+  /* ---------- Final call ---------- */
 
   .final {
-    padding-block: 2rem 2.5rem;
+    padding-block: 1.5rem 2.5rem;
   }
+
+  .final__card {
+    position: relative;
+    isolation: isolate;
+    padding: 1.75rem 1.25rem 1.6rem;
+    border-radius: 14px;
+    background: var(--surface);
+  }
+
+  .final__card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    z-index: -2;
+    border-radius: 16px;
+    background: conic-gradient(from var(--angle), var(--ember), var(--gold), var(--teal), var(--ember-deep), var(--ember));
+    animation: spin 6s linear infinite;
+  }
+
+  .final__card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 14px;
+    background:
+      radial-gradient(closest-side at 50% 0%, rgba(255, 129, 69, 0.18), transparent),
+      var(--surface);
+  }
+
+  .final__card :global(.final__icon) {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    border-radius: 16px;
+    image-rendering: pixelated;
+  }
+
+  .final__card p {
+    color: var(--muted);
+    margin-bottom: 1.3rem;
+  }
+
+  /* ---------- Footer ---------- */
 
   .foot {
     padding: 1.5rem var(--gutter) 2rem;
@@ -313,5 +685,338 @@ const steps = [
 
   .foot p {
     margin: 0;
+  }
+
+  /* ---------- Sticky bar (only where scroll-driven animations exist) ---------- */
+
+  .sticky {
+    display: none;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .sticky {
+      display: block;
+      position: fixed;
+      inset: auto 0 0;
+      z-index: 10;
+      padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom));
+      background: rgba(16, 18, 26, 0.92);
+      border-top: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+      transform: translateY(110%);
+      animation: sticky-in linear both;
+    }
+
+    /* Timeline set in its own rule: the minifier would otherwise fold it into the
+       animation shorthand, which browsers reject. */
+    div.sticky {
+      animation-timeline: scroll(root);
+      animation-range: 520px 620px;
+    }
+
+    .foot {
+      padding-bottom: 6rem;
+    }
+  }
+
+  .sticky__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    max-width: 420px;
+    min-height: 50px;
+    margin-inline: auto;
+    background: var(--ember);
+    border-radius: 8px;
+    color: #1a0f08;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .sticky__btn:hover {
+    color: #1a0f08;
+  }
+
+  .sticky__btn :global(img) {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    image-rendering: pixelated;
+  }
+
+  /* ---------- Entrance and scroll reveal ---------- */
+
+  .enter {
+    animation: enter 0.6s var(--ease) calc(var(--i) * 0.08s) both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+    }
+
+    :is(h2, div, li, p).reveal {
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+
+  /* ---------- Keyframes ---------- */
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  /* Movement only, never opacity: content stays visible to crawlers and full-page captures. */
+  @keyframes reveal {
+    from {
+      transform: translateY(24px) scale(0.96);
+    }
+  }
+
+  @keyframes glow {
+    50% {
+      opacity: 0.65;
+    }
+  }
+
+  @keyframes rise {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0);
+    }
+    10% {
+      opacity: 0.9;
+    }
+    50% {
+      transform: translate(10px, -230px);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-6px, -460px);
+    }
+  }
+
+  @keyframes ring {
+    0% {
+      opacity: 0.8;
+      transform: scale(0.92);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.25);
+    }
+  }
+
+  @keyframes bob {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  /* Dice tumble in quarter turns, like pixel sprites. */
+  @keyframes hop {
+    0% {
+      rotate: 0deg;
+    }
+    25% {
+      rotate: 90deg;
+    }
+    50% {
+      rotate: 180deg;
+    }
+    75% {
+      rotate: 270deg;
+    }
+  }
+
+  @keyframes drift {
+    50% {
+      translate: 0 -8px;
+    }
+  }
+
+  @keyframes shine {
+    0%,
+    100% {
+      background-position: 100% 0;
+    }
+    50% {
+      background-position: 0% 0;
+    }
+  }
+
+  @keyframes breathe {
+    50% {
+      box-shadow:
+        0 4px 0 #a8461c,
+        0 10px 40px rgba(255, 129, 69, 0.6);
+    }
+  }
+
+  @keyframes sweep {
+    0% {
+      left: -60%;
+    }
+    45%,
+    100% {
+      left: 130%;
+    }
+  }
+
+  @keyframes nudge {
+    50% {
+      transform: translateY(3px);
+    }
+  }
+
+  @keyframes float {
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes merge-a {
+    0%,
+    18% {
+      transform: translateX(-80px);
+      opacity: 1;
+    }
+    44% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    48%,
+    92% {
+      transform: translateX(0) scale(0.6);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(-80px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes merge-b {
+    0%,
+    18% {
+      transform: translateX(80px);
+      opacity: 1;
+    }
+    44% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    48%,
+    92% {
+      transform: translateX(0) scale(0.6);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(80px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes merge-c {
+    0%,
+    44% {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    52% {
+      opacity: 1;
+      transform: scale(1.3);
+    }
+    60%,
+    84% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    92%,
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes burst {
+    0%,
+    45% {
+      opacity: 0;
+      transform: scale(0.5) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(1.9) rotate(45deg);
+    }
+  }
+
+  @keyframes plus {
+    0%,
+    50% {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    58% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    80% {
+      opacity: 1;
+      transform: translateY(-6px);
+    }
+    90%,
+    100% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes spin {
+    to {
+      --angle: 360deg;
+    }
+  }
+
+  @keyframes sticky-in {
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+    }
+
+    .orbit :global(svg) {
+      animation: none !important;
+    }
+
+    .sticky {
+      transform: none;
+    }
+
+    .demo__die--a,
+    .demo__die--b,
+    .demo__burst,
+    .demo__plus {
+      display: none;
+    }
+
+    .demo__die--c {
+      opacity: 1;
+    }
   }
 </style>
