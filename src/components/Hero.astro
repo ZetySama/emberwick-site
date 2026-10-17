@@ -35,7 +35,7 @@ const sparks = [
 
   <div class="container hero__content">
     <p class="eyebrow hero__eyebrow">Emberwick Games</p>
-    <h1 id="hero-title" class="hero__title">Small worlds.<br /> Lasting adventures.</h1>
+    <h1 id="hero-title" class="hero__title">Small worlds.<br /> <span class="hero__shine ew-shine-text">Lasting adventures.</span></h1>
     <p class="hero__text">
       We craft thoughtful games with distinctive worlds, satisfying mechanics, and a spark of wonder.
     </p>
@@ -185,6 +185,12 @@ const sparks = [
     text-shadow:
       0 3px 0 rgba(0, 0, 0, 0.55),
       0 0 30px rgba(10, 12, 22, 0.9);
+  }
+
+  /* text-shadow would paint over gradient text, so the shadow comes from a filter instead. */
+  .hero__shine {
+    text-shadow: none;
+    filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.55)) drop-shadow(0 0 18px rgba(10, 12, 22, 0.8));
   }
 
   .hero__text {

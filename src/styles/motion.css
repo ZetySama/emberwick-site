@@ -1,0 +1,209 @@
+/* Shared motion language: rising embers, floating and tumbling pixel dice, swinging lanterns,
+   shimmering highlights. Everything animates transform/opacity only and stops under
+   prefers-reduced-motion (see the end of this file and global.css). */
+
+@property --ew-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ---------- Utilities ---------- */
+
+/* Slow vertical float. Tune with --float-y, --float-dur, --float-delay. */
+.ew-float {
+  animation: ew-float var(--float-dur, 5s) ease-in-out var(--float-delay, 0s) infinite;
+}
+
+/* Small, quicker bob for icons. */
+.ew-bob {
+  animation: ew-bob var(--bob-dur, 3.2s) ease-in-out var(--bob-delay, 0s) infinite;
+}
+
+/* Pendulum swing from the top edge (lanterns, hanging things). */
+.ew-swing {
+  transform-origin: 50% 0;
+  animation: ew-swing var(--swing-dur, 3.6s) ease-in-out var(--swing-delay, 0s) infinite;
+}
+
+/* Pixel die tumbling in quarter turns while drifting. */
+.ew-tumble {
+  animation:
+    ew-tumble var(--tumble-dur, 2.8s) steps(1, end) var(--tumble-delay, 0s) infinite,
+    ew-drift var(--tumble-dur, 2.8s) ease-in-out var(--tumble-delay, 0s) infinite;
+}
+
+/* Ember flicker: glow breathing in an uneven rhythm. */
+.ew-flicker {
+  animation: ew-flicker 2.6s ease-in-out var(--flicker-delay, 0s) infinite;
+}
+
+/* Gold light sweeping across text. */
+.ew-shine-text {
+  background: linear-gradient(100deg, var(--ember) 0%, var(--gold) 35%, #fff4dc 50%, var(--gold) 65%, var(--ember) 100%);
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ew-shine 4s ease-in-out 1s infinite;
+}
+
+/* Rotating ember border drawn as a 2px ring just outside the element's edge. */
+.ew-spin-border {
+  position: relative;
+}
+
+.ew-spin-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  border-radius: calc(var(--spin-radius, 14px) + 2px);
+  background: conic-gradient(from var(--ew-angle), var(--ember), var(--gold), var(--teal), var(--ember-deep), var(--ember));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+  animation: ew-spin 6s linear infinite;
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes ew-float {
+  50% {
+    transform: translateY(var(--float-y, -10px));
+  }
+}
+
+@keyframes ew-bob {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes ew-swing {
+  0%,
+  100% {
+    rotate: -6deg;
+  }
+  50% {
+    rotate: 6deg;
+  }
+}
+
+@keyframes ew-tumble {
+  0% {
+    rotate: 0deg;
+  }
+  25% {
+    rotate: 90deg;
+  }
+  50% {
+    rotate: 180deg;
+  }
+  75% {
+    rotate: 270deg;
+  }
+}
+
+@keyframes ew-drift {
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+@keyframes ew-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  10% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(10px, calc(var(--rise, 460px) * -0.5));
+  }
+  85% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-6px, calc(var(--rise, 460px) * -1));
+  }
+}
+
+@keyframes ew-ring {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes ew-flicker {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgba(255, 129, 69, 0.35));
+  }
+  30% {
+    filter: drop-shadow(0 0 14px rgba(255, 129, 69, 0.65));
+  }
+  45% {
+    filter: drop-shadow(0 0 8px rgba(255, 129, 69, 0.45));
+  }
+  70% {
+    filter: drop-shadow(0 0 16px rgba(239, 199, 121, 0.6));
+  }
+}
+
+@keyframes ew-shine {
+  0%,
+  100% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0% 0;
+  }
+}
+
+@keyframes ew-sweep {
+  0% {
+    left: -60%;
+  }
+  45%,
+  100% {
+    left: 130%;
+  }
+}
+
+@keyframes ew-glow {
+  50% {
+    opacity: 0.65;
+  }
+}
+
+@keyframes ew-spin {
+  to {
+    --ew-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ew-float,
+  .ew-bob,
+  .ew-swing,
+  .ew-tumble,
+  .ew-flicker,
+  .ew-shine-text,
+  .ew-spin-border::before {
+    animation: none !important;
+  }
+}

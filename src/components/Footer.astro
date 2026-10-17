@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import Logo from './Logo.astro';
 import SocialIcon from './icons/SocialIcon.astro';
+import Sparks from './motion/Sparks.astro';
 import footerScene from '../assets/scenes/footer.jpg';
 import { activeSocials, site } from '../config/site';
 
@@ -22,6 +23,7 @@ const links = [
       formats={['avif', 'webp']}
       loading="lazy"
     />
+    <Sparks count={10} rise="260px" class="site-footer__sparks" />
   </div>
 
   <div class="container site-footer__inner">
@@ -104,6 +106,10 @@ const links = [
     z-index: 1;
   }
 
+  .site-footer__scene :global(.site-footer__sparks) {
+    z-index: 2;
+  }
+
   .site-footer__inner {
     display: flex;
     align-items: center;
@@ -178,7 +184,11 @@ const links = [
   }
 
   @media (max-width: 767px) {
-    .site-footer__inner {
+    .site-footer__scene :global(.site-footer__sparks) {
+    z-index: 2;
+  }
+
+  .site-footer__inner {
       flex-direction: column;
       align-items: flex-start;
     }

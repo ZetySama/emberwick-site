@@ -1,0 +1,65 @@
+---
+// Embers rising from the bottom of the nearest positioned ancestor. Decorative only.
+interface Props {
+  count?: number;
+  /** Horizontal band the sparks start in, in % of the container width. */
+  from?: number;
+  to?: number;
+  /** How far a spark travels before fading out (any CSS length). */
+  rise?: string;
+  class?: string;
+}
+
+const { count = 12, from = 4, to = 96, rise = '460px', class: className } = Astro.props;
+
+// Deterministic spread so every build renders the same markup.
+const sparks = Array.from({ length: count }, (_, i) => ({
+  x: from + (((i * 61) % 100) / 100) * (to - from),
+  size: 2 + ((i * 7) % 3),
+  dur: 7 + ((i * 13) % 5),
+  delay: -((i * 29) % 9) - 0.5 * (i % 2),
+  gold: i % 3 === 2,
+}));
+---
+
+<div class:list={['sparks', className]} style={`--rise:${rise}`} aria-hidden="true">
+  {
+    sparks.map((s) => (
+      <span
+        class:list={[{ 'is-gold': s.gold }]}
+        style={`left:${s.x.toFixed(1)}%;width:${s.size}px;height:${s.size}px;animation-duration:${s.dur}s;animation-delay:${s.delay}s`}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .sparks {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  span {
+    position: absolute;
+    bottom: -8px;
+    background: var(--ember);
+    box-shadow: 0 0 6px rgba(255, 129, 69, 0.8);
+    opacity: 0;
+    animation-name: ew-rise;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  .is-gold {
+    background: var(--gold);
+    box-shadow: 0 0 6px rgba(239, 199, 121, 0.7);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sparks {
+      display: none;
+    }
+  }
+</style>

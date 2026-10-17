@@ -6,13 +6,15 @@ import studioScene from '../assets/scenes/studio.jpg';
 
 <section id="studio" class="section studio-intro" aria-labelledby="studio-intro-title">
   <div class="container studio-intro__grid">
-    <div class="studio-intro__art frame" data-reveal>
+    <div data-reveal>
+      <div class="studio-intro__art frame ew-float" style="--float-y:-8px;--float-dur:7s">
       <Picture
         src={studioScene}
         alt="Pixel-art studio at night: a hooded developer works on a laptop by the window, a cat asleep on the chair, a fireplace crackling behind."
         formats={['avif', 'webp']}
         sizes="(min-width: 900px) 55vw, 100vw"
       />
+      </div>
     </div>
 
     <div class="studio-intro__text" data-reveal style="--reveal-delay: 0.1s">

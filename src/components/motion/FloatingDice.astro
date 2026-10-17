@@ -1,0 +1,72 @@
+---
+// Faint pixel dice drifting and tumbling behind a section. Fills the nearest positioned
+// ancestor; give that ancestor overflow: hidden. Decorative only.
+import PixelIcon from '../icons/PixelIcon.astro';
+import { dieFaceMap, diePalettes, type DieValue } from '../icons/dice-faces';
+
+interface Props {
+  /** Which preset layout to use. */
+  layout?: 'edges' | 'scatter';
+  class?: string;
+}
+
+const { layout = 'edges', class: className } = Astro.props;
+
+type Spot = { v: DieValue; x: number; y: number; size: number; delay: number; dur: number; hideSmall?: boolean };
+
+const layouts: Record<'edges' | 'scatter', Spot[]> = {
+  // Keeps the middle clear for text.
+  edges: [
+    { v: 2, x: 4, y: 18, size: 28, delay: 0, dur: 6 },
+    { v: 5, x: 90, y: 12, size: 34, delay: -2, dur: 7 },
+    { v: 3, x: 12, y: 72, size: 22, delay: -4, dur: 5.5, hideSmall: true },
+    { v: 6, x: 84, y: 68, size: 26, delay: -1, dur: 6.5 },
+    { v: 1, x: 70, y: 30, size: 18, delay: -3, dur: 8, hideSmall: true },
+  ],
+  scatter: [
+    { v: 4, x: 8, y: 22, size: 26, delay: -1, dur: 6.5 },
+    { v: 2, x: 28, y: 78, size: 20, delay: -3.5, dur: 7, hideSmall: true },
+    { v: 6, x: 50, y: 10, size: 18, delay: -2, dur: 8, hideSmall: true },
+    { v: 3, x: 74, y: 82, size: 24, delay: -5, dur: 6 },
+    { v: 5, x: 92, y: 30, size: 30, delay: 0, dur: 7.5, hideSmall: true },
+  ],
+};
+---
+
+<div class:list={['floating-dice', className]} aria-hidden="true">
+  {
+    layouts[layout].map((d) => (
+      <span
+        class:list={['ew-float', { 'hide-small': d.hideSmall }]}
+        style={`left:${d.x}%;top:${d.y}%;--float-dur:${d.dur}s;--float-delay:${d.delay}s;--float-y:-14px;--tumble-dur:${(d.dur * 0.9).toFixed(1)}s;--tumble-delay:${d.delay}s`}
+      >
+        <PixelIcon map={dieFaceMap(d.v)} palette={diePalettes[d.v]} size={Math.round(d.size * 1.25)} class="ew-tumble" />
+      </span>
+    ))
+  }
+</div>
+
+<style>
+  .floating-dice {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  span {
+    position: absolute;
+    opacity: 0.4;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+  }
+
+  span :global(svg) {
+    display: block;
+  }
+
+  @media (max-width: 599px) {
+    .hide-small {
+      display: none;
+    }
+  }
+</style>

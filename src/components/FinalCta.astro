@@ -2,13 +2,17 @@
 import Button from './Button.astro';
 import PixelIcon from './icons/PixelIcon.astro';
 import { emberMap, palettes } from './icons/pixel-maps';
+import Sparks from './motion/Sparks.astro';
+import FloatingDice from './motion/FloatingDice.astro';
 ---
 
 <section class="section cta" aria-labelledby="cta-title">
   <div class="cta__glow" aria-hidden="true"></div>
+  <FloatingDice />
+  <Sparks count={14} rise="420px" />
   <div class="container cta__inner" data-reveal>
-    <div class="cta__ember" aria-hidden="true">
-      <PixelIcon map={emberMap} palette={palettes.ember} size={64} />
+    <div class="cta__ember ew-bob" aria-hidden="true">
+      <PixelIcon map={emberMap} palette={palettes.ember} size={64} class="ew-flicker" />
     </div>
     <h2 id="cta-title">Every great adventure starts somewhere.</h2>
     <p class="lead">Ours starts with a handful of dice. Come take a look.</p>
@@ -55,6 +59,7 @@ import { emberMap, palettes } from './icons/pixel-maps';
 
   .cta__inner {
     position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;

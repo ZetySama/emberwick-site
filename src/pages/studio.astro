@@ -37,13 +37,15 @@ const approach = [
 
   <section class="section studio-story" aria-labelledby="approach-title">
     <div class="container studio-story__grid">
-      <div class="studio-story__art frame" data-reveal>
+      <div data-reveal>
+        <div class="studio-story__art frame ew-float" style="--float-y:-8px;--float-dur:7s">
         <Picture
           src={studioScene}
           alt="Pixel-art studio at night: a hooded developer works on a laptop by the window, a cat asleep on the chair, a fireplace crackling behind."
           formats={['avif', 'webp']}
           sizes="(min-width: 900px) 50vw, 100vw"
         />
+      </div>
       </div>
       <div data-reveal style="--reveal-delay: 0.1s">
         <p class="eyebrow">How we work</p>
@@ -71,7 +73,7 @@ const approach = [
 
   <section class="section studio-cta" aria-labelledby="studio-cta-title">
     <div class="container studio-cta__inner" data-reveal>
-      <PixelIcon map={emberMap} palette={palettes.ember} size={48} />
+      <span class="ew-bob" style="display:block;line-height:0"><PixelIcon map={emberMap} palette={palettes.ember} size={48} class="ew-flicker" /></span>
       <div>
         <h2 id="studio-cta-title">Say hello</h2>
         <p class="muted">Feedback, questions and ideas are always welcome.</p>

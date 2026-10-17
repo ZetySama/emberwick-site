@@ -9,6 +9,8 @@ const pillars = [
     map: diceMap,
     palette: palettes.dice,
     accent: 'ember',
+    motion: 'ew-float',
+    iconClass: 'ew-tumble',
   },
   {
     title: 'Distinctive Worlds',
@@ -16,6 +18,8 @@ const pillars = [
     map: lanternMap,
     palette: palettes.lantern,
     accent: 'teal',
+    motion: 'ew-swing',
+    iconClass: '',
   },
   {
     title: 'Crafted Experiences',
@@ -23,6 +27,8 @@ const pillars = [
     map: crownMap,
     palette: palettes.crown,
     accent: 'gold',
+    motion: 'ew-bob',
+    iconClass: 'ew-flicker',
   },
 ] as const;
 ---
@@ -39,7 +45,9 @@ const pillars = [
         pillars.map((p, i) => (
           <li class={`pillar pillar--${p.accent}`} data-reveal style={`--reveal-delay:${i * 0.1}s`}>
             <div class="pillar__icon">
-              <PixelIcon map={p.map} palette={p.palette} size={72} />
+              <span class:list={['pillar__motion', p.motion]} style="--tumble-dur:4.5s;--float-y:-8px">
+                <PixelIcon map={p.map} palette={p.palette} size={72} class={p.iconClass} />
+              </span>
             </div>
             <h3>{p.title}</h3>
             <p>{p.text}</p>
@@ -110,6 +118,11 @@ const pillars = [
     margin-bottom: 1.5rem;
     border-radius: 8px;
     background: radial-gradient(circle at 50% 55%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+  }
+
+  .pillar__motion {
+    display: block;
+    line-height: 0;
   }
 
   .pillar h3 {

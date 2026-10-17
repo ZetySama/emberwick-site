@@ -1,6 +1,7 @@
 // 16x16 pixel dice faces (1–6) for PixelIcon, in the same outline style as diceMap.
 
-type Value = 1 | 2 | 3 | 4 | 5 | 6;
+export type DieValue = 1 | 2 | 3 | 4 | 5 | 6;
+type Value = DieValue;
 
 // Top-left corner of each 3x3 pip slot.
 const slots = {
