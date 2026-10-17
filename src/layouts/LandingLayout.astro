@@ -1,0 +1,35 @@
+---
+// Minimal shell for ad landing pages: no site header/nav, no scripts, kept out of search.
+import '@fontsource/press-start-2p/latin-400.css';
+import '@fontsource/press-start-2p/latin-ext-400.css';
+import '@fontsource-variable/inter/wght.css';
+import '../styles/global.css';
+import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import pixelFont from '@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2?url';
+import Seo from '../components/Seo.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageAlt?: string;
+}
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={interFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={pixelFont} as="font" type="font/woff2" crossorigin />
+    <Seo {...props} noindex robots="noindex,nofollow" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

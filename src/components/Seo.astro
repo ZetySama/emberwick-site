@@ -5,10 +5,24 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageAlt?: string;
   noindex?: boolean;
+  /** Overrides the robots value used when noindex is set. */
+  robots?: string;
 }
 
-const { title, description = site.description, image = '/og-image.png', noindex = false } = Astro.props;
+const {
+  title,
+  description = site.description,
+  image = '/og-image.png',
+  imageWidth = 1200,
+  imageHeight = 630,
+  imageAlt = 'Emberwick Games logo over a pixel-art night scene with a campfire and a castle.',
+  noindex = false,
+  robots = 'noindex',
+} = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Small worlds. Lasting adventures.`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogImage = new URL(image, site.url).href;
@@ -17,7 +31,7 @@ const ogImage = new URL(image, site.url).href;
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 {!noindex && <link rel="canonical" href={canonical} />}
-{noindex && <meta name="robots" content="noindex" />}
+{noindex && <meta name="robots" content={robots} />}
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content={site.name} />
@@ -25,9 +39,9 @@ const ogImage = new URL(image, site.url).href;
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={ogImage} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Emberwick Games logo over a pixel-art night scene with a campfire and a castle." />
+<meta property="og:image:width" content={String(imageWidth)} />
+<meta property="og:image:height" content={String(imageHeight)} />
+<meta property="og:image:alt" content={imageAlt} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />

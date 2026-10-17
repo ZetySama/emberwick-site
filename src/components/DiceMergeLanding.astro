@@ -1,0 +1,317 @@
+---
+// Dice Merge ad landing page. Shared by /dice-merge/ and the per-channel pages; only utm_source differs.
+import { Image, getImage } from 'astro:assets';
+import LandingLayout from '../layouts/LandingLayout.astro';
+import Logo from './Logo.astro';
+import { getGame } from '../data/games';
+import { playUrl } from '../data/landing';
+import gameplay1 from '../assets/games/dice-merge/gameplay-1.jpeg';
+import gameplay2 from '../assets/games/dice-merge/gameplay-2.jpeg';
+import jokerBomb from '../assets/games/dice-merge/joker-bomb.jpeg';
+import jokerClear from '../assets/games/dice-merge/joker-clear-value.jpeg';
+
+interface Props {
+  utmSource: string;
+}
+
+const { utmSource } = Astro.props;
+const game = getGame('dice-merge')!;
+const href = playUrl(utmSource);
+
+const title = 'Dice Merge: Pixel Puzzle';
+const tagline = 'Zarları birleştir, zincirleme kombolar yap ve rekorunu kır.';
+const description = `${tagline} Emberwick Games'in piksel sanat bulmaca oyunu Dice Merge, Android'de Google Play'de.`;
+
+const ogImage = await getImage({ src: game.feature, format: 'jpg', width: 1024 });
+
+const shots = [
+  { src: gameplay1, alt: 'Dice Merge oyun ekranı: renkli zarlarla dolu 5x5 ahşap tahta ve üstte skor.', caption: '5x5 tahtada birleştir' },
+  { src: jokerBomb, alt: 'Bomba jokeri kartı.', caption: 'Bomba jokeri' },
+  { src: jokerClear, alt: 'Değer Temizleme jokeri kartı.', caption: 'Değer Temizleme jokeri' },
+  { src: gameplay2, alt: 'Daha yüksek skorlu bir Dice Merge oyunu ve tahtanın altında sıradaki zar.', caption: 'Rekorunu kovala' },
+];
+
+const steps = [
+  { title: 'Zarları yerleştir', text: 'Sıradaki zarı 5x5 tahtada istediğin kareye koy.' },
+  { title: 'Aynı zarları yan yana getir', text: 'Aynı değerdeki zarlar birleşir ve bir üst değere yükselir.' },
+  { title: 'Zincirle ve rekor kır', text: 'Birleşmeleri art arda bağla, kombo yap ve en iyi skorunu geç.' },
+];
+---
+
+<LandingLayout
+  title={title}
+  description={description}
+  image={ogImage.src}
+  imageWidth={ogImage.attributes.width as number}
+  imageHeight={ogImage.attributes.height as number}
+  imageAlt={game.featureAlt}
+>
+  <header class="bar">
+    <a href="/" class="bar__home" aria-label="Emberwick Games ana sayfa"><Logo /></a>
+  </header>
+
+  <main class="landing">
+    <section class="hero">
+      <Image src={game.icon} alt="Dice Merge uygulama ikonu" width={88} densities={[1, 2]} class="hero__icon" priority />
+      <h1>{title}</h1>
+      <p class="hero__tagline">{tagline}</p>
+      <a class="cta" href={href}>Google Play'den indir <span aria-hidden="true">→</span></a>
+      <p class="hero__note">Android · Emberwick Games</p>
+    </section>
+
+    <section class="shots" aria-label="Oyundan ekran görüntüleri">
+      <ul class="shots__list">
+        {
+          shots.map((s) => (
+            <li>
+              <figure>
+                <Image src={s.src} alt={s.alt} widths={[180, 360]} sizes="180px" class="frame" />
+                <figcaption>{s.caption}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="how">
+      <h2>Nasıl oynanır</h2>
+      <ol class="how__steps">
+        {
+          steps.map((step, i) => (
+            <li>
+              <span class="how__num" aria-hidden="true">{i + 1}</span>
+              <div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="how__jokers">Tahta dolmaya başladığında Bomba ve Değer Temizleme jokerleri oyunu tersine çevirebilir.</p>
+    </section>
+
+    <section class="final">
+      <h2>Hemen oynamaya başla</h2>
+      <a class="cta" href={href}>Google Play'den indir <span aria-hidden="true">→</span></a>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <nav aria-label="Site bağlantıları">
+      <a href="/">Emberwick Games</a>
+      <a href={`${game.privacyPath}/`}>Gizlilik politikası</a>
+      <a href="/contact/">İletişim</a>
+    </nav>
+    <p>© {new Date().getFullYear()} Emberwick Games</p>
+  </footer>
+</LandingLayout>
+
+<style>
+  .bar {
+    display: flex;
+    justify-content: center;
+    padding: 0.85rem var(--gutter);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bar__home {
+    display: inline-flex;
+  }
+
+  .landing {
+    width: min(100% - 2 * var(--gutter), 560px);
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .hero {
+    padding-block: 1.75rem 1.5rem;
+  }
+
+  .hero :global(.hero__icon) {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 1.1rem;
+    border-radius: 20px;
+    image-rendering: pixelated;
+    box-shadow: 0 10px 30px rgba(255, 129, 69, 0.18);
+  }
+
+  h1 {
+    font-size: clamp(1.15rem, 0.9rem + 1.6vw, 1.75rem);
+    margin-bottom: 0.85rem;
+  }
+
+  .hero__tagline {
+    font-size: 1.125rem;
+    color: var(--cream);
+    margin-bottom: 1.4rem;
+  }
+
+  .cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 360px;
+    min-height: 58px;
+    margin-inline: auto;
+    padding: 0.9rem 1.4rem;
+    background: var(--ember);
+    border: 2px solid var(--ember);
+    border-radius: 8px;
+    color: #1a0f08;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(255, 129, 69, 0.28);
+    transition:
+      background-color 0.25s var(--ease),
+      transform 0.2s var(--ease);
+  }
+
+  .cta:hover,
+  .cta:focus-visible {
+    background: var(--ember-deep);
+    border-color: var(--ember-deep);
+    color: #1a0f08;
+    transform: translateY(-1px);
+  }
+
+  .hero__note {
+    margin: 0.85rem 0 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .shots {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .shots__list {
+    display: flex;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0.5rem var(--gutter) 1rem;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  .shots__list li {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .shots__list {
+      justify-content: center;
+    }
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  figure :global(img) {
+    width: 150px;
+    height: auto;
+    aspect-ratio: 945 / 2048;
+    object-fit: cover;
+  }
+
+  figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .how {
+    padding-block: 2rem 1rem;
+    text-align: left;
+  }
+
+  .how h2 {
+    text-align: center;
+  }
+
+  .how__steps {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .how__steps li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .how__num {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 6px;
+    background: rgba(255, 129, 69, 0.14);
+    color: var(--ember);
+    font-family: var(--font-pixel);
+    font-size: 0.85rem;
+  }
+
+  .how h3 {
+    margin: 0.15rem 0 0.35rem;
+    color: var(--gold);
+  }
+
+  .how__steps p,
+  .how__jokers {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .how__jokers {
+    text-align: center;
+  }
+
+  .final {
+    padding-block: 2rem 2.5rem;
+  }
+
+  .foot {
+    padding: 1.5rem var(--gutter) 2rem;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .foot nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .foot a {
+    color: var(--cream);
+  }
+
+  .foot p {
+    margin: 0;
+  }
+</style>
