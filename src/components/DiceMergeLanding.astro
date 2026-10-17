@@ -5,6 +5,8 @@ import { Image, getImage } from 'astro:assets';
 import LandingLayout from '../layouts/LandingLayout.astro';
 import Logo from './Logo.astro';
 import PixelIcon from './icons/PixelIcon.astro';
+import Sparks from './motion/Sparks.astro';
+import DiceOrbit from './motion/DiceOrbit.astro';
 import { dieFaceMap, diePalettes } from './icons/dice-faces';
 import { getGame } from '../data/games';
 import { playUrl } from '../data/landing';
@@ -31,21 +33,6 @@ const phones = [
   { src: gameplay1, alt: 'Dice Merge oyun ekranı: renkli zarlarla dolu 5x5 ahşap tahta ve üstte skor.', pos: 'center' },
   { src: jokerClear, alt: 'Değer Temizleme jokeri kartı.', pos: 'right' },
 ] as const;
-
-// Dice orbiting the app icon: value, position and timing.
-const orbit = [
-  { v: 2, x: '-88px', y: '-6px', d: '0s' },
-  { v: 5, x: '82px', y: '-22px', d: '-1.2s' },
-  { v: 3, x: '-70px', y: '58px', d: '-2.1s' },
-  { v: 6, x: '76px', y: '52px', d: '-0.6s' },
-] as const;
-
-// Rising ember sparks behind the hero (left %, size px, duration s, delay s).
-const sparks = [
-  [6, 4, 7, 0], [14, 3, 9, -3], [22, 5, 8, -5], [31, 3, 10, -1], [40, 4, 7.5, -6],
-  [48, 3, 9.5, -2], [57, 5, 8.5, -4], [66, 3, 7, -7], [74, 4, 10, -3.5], [83, 3, 8, -1.5],
-  [91, 5, 9, -5.5], [96, 3, 7.5, -2.5],
-];
 
 const chips = [
   { v: 1, label: '5×5 tahta' },
@@ -75,29 +62,19 @@ const steps = [
   <main>
     <section class="hero">
       <div class="hero__glow" aria-hidden="true"></div>
-      <div class="sparks" aria-hidden="true">
-        {sparks.map(([x, s, d, delay]) => <span style={`--x:${x}%;--s:${s}px;--d:${d}s;--delay:${delay}s`} />)}
-      </div>
+      <Sparks count={12} rise="460px" />
 
       <div class="wrap hero__inner">
         <div class="art">
-          <div class="art__ring" aria-hidden="true"></div>
-          <div class="art__icon">
-            <Image src={game.icon} alt="Dice Merge uygulama ikonu" width={96} densities={[1, 2]} priority />
-          </div>
-          {
-            orbit.map((o) => (
-              <div class="orbit" style={`--ox:${o.x};--oy:${o.y};--od:${o.d}`}>
-                <PixelIcon map={dieFaceMap(o.v)} palette={diePalettes[o.v]} size={30} />
-              </div>
-            ))
-          }
+          <DiceOrbit spread={88} dieSize={30} values={[2, 5, 3, 6]} ring radius="30px">
+            <Image src={game.icon} alt="Dice Merge uygulama ikonu" width={96} densities={[1, 2]} priority class="art__icon" />
+          </DiceOrbit>
         </div>
 
         <p class="eyebrow enter" style="--i:1">EMBERWICK GAMES SUNAR</p>
         <h1 class="enter" style="--i:2">
           <span class="h1__name">Dice Merge:</span>
-          <span class="h1__shine">Pixel Puzzle</span>
+          <span class="ew-shine-text">Pixel Puzzle</span>
         </h1>
         <p class="hero__tagline enter" style="--i:3">{tagline}</p>
 
@@ -128,7 +105,7 @@ const steps = [
       {
         phones.map((p) => (
           <div class:list={['phone', `phone--${p.pos}`]}>
-            <div class="phone__float">
+            <div class="phone__float ew-float" style="--float-dur:4.5s">
               <Image
                 src={p.src}
                 alt={p.alt}
@@ -174,7 +151,7 @@ const steps = [
     </section>
 
     <section class="final wrap">
-      <div class="final__card reveal">
+      <div class="final__card ew-spin-border reveal">
         <Image src={game.icon} alt="" width={64} densities={[1, 2]} class="final__icon" />
         <h2>Rekor seni bekliyor</h2>
         <p>Tahtayı doldurmadan zincirleri kur, jokerleri doğru anda kullan.</p>
@@ -206,12 +183,6 @@ const steps = [
 </LandingLayout>
 
 <style>
-  @property --angle {
-    syntax: '<angle>';
-    inherits: false;
-    initial-value: 0deg;
-  }
-
   .wrap {
     width: min(100% - 2 * var(--gutter), 560px);
     margin-inline: auto;
@@ -254,23 +225,7 @@ const steps = [
     background:
       radial-gradient(closest-side at 50% 45%, rgba(255, 129, 69, 0.32), transparent 70%),
       radial-gradient(closest-side at 50% 60%, rgba(239, 199, 121, 0.12), transparent 80%);
-    animation: glow 5s ease-in-out infinite;
-  }
-
-  .sparks span {
-    position: absolute;
-    bottom: -10px;
-    left: var(--x);
-    width: var(--s);
-    height: var(--s);
-    background: var(--ember);
-    box-shadow: 0 0 6px rgba(255, 129, 69, 0.8);
-    opacity: 0;
-    animation: rise var(--d) linear var(--delay) infinite;
-  }
-
-  .sparks span:nth-child(3n) {
-    background: var(--gold);
+    animation: ew-glow 5s ease-in-out infinite;
   }
 
   .art {
@@ -280,23 +235,7 @@ const steps = [
     margin: 0 auto 0.6rem;
   }
 
-  .art__ring {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    width: 116px;
-    height: 116px;
-    border-radius: 30px;
-    border: 2px solid rgba(255, 129, 69, 0.55);
-    animation: ring 2.6s ease-out infinite;
-  }
-
-  .art__icon {
-    position: relative;
-    animation: bob 3.2s ease-in-out infinite;
-  }
-
-  .art__icon :global(img) {
+  .art :global(.art__icon) {
     display: block;
     width: 96px;
     height: 96px;
@@ -305,19 +244,6 @@ const steps = [
     box-shadow:
       0 0 0 3px rgba(239, 199, 121, 0.35),
       0 12px 32px rgba(255, 129, 69, 0.35);
-  }
-
-  .orbit {
-    position: absolute;
-    top: 33px;
-    left: 33px;
-    transform: translate(var(--ox), var(--oy));
-    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
-  }
-
-  .orbit :global(svg) {
-    display: block;
-    animation: hop 2.8s steps(1, end) var(--od) infinite, drift 2.8s ease-in-out var(--od) infinite;
   }
 
   .eyebrow {
@@ -335,16 +261,6 @@ const steps = [
 
   h1 span {
     display: block;
-  }
-
-  .h1__shine {
-    background: linear-gradient(100deg, var(--ember) 0%, var(--gold) 35%, #fff4dc 50%, var(--gold) 65%, var(--ember) 100%);
-    background-size: 250% 100%;
-    background-position: 100% 0;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shine 4s ease-in-out 1s infinite;
   }
 
   .hero__tagline {
@@ -390,7 +306,7 @@ const steps = [
     width: 40%;
     background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
     transform: skewX(-20deg);
-    animation: sweep 3.2s ease-in-out 1.2s infinite;
+    animation: ew-sweep 3.2s ease-in-out 1.2s infinite;
   }
 
   .cta:hover,
@@ -492,16 +408,12 @@ const steps = [
     filter: brightness(0.82);
   }
 
-  .phone__float {
-    animation: float 4.5s ease-in-out infinite;
-  }
-
   .phone--left .phone__float {
-    animation-delay: -1.5s;
+    --float-delay: -1.5s;
   }
 
   .phone--right .phone__float {
-    animation-delay: -3s;
+    --float-delay: -3s;
   }
 
   /* ---------- How to play ---------- */
@@ -620,28 +532,8 @@ const steps = [
   }
 
   .final__card {
-    position: relative;
-    isolation: isolate;
+    --spin-radius: 14px;
     padding: 1.75rem 1.25rem 1.6rem;
-    border-radius: 14px;
-    background: var(--surface);
-  }
-
-  .final__card::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    z-index: -2;
-    border-radius: 16px;
-    background: conic-gradient(from var(--angle), var(--ember), var(--gold), var(--teal), var(--ember-deep), var(--ember));
-    animation: spin 6s linear infinite;
-  }
-
-  .final__card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
     border-radius: 14px;
     background:
       radial-gradient(closest-side at 50% 0%, rgba(255, 129, 69, 0.18), transparent),
@@ -778,78 +670,7 @@ const steps = [
     }
   }
 
-  @keyframes glow {
-    50% {
-      opacity: 0.65;
-    }
-  }
-
-  @keyframes rise {
-    0% {
-      opacity: 0;
-      transform: translate(0, 0);
-    }
-    10% {
-      opacity: 0.9;
-    }
-    50% {
-      transform: translate(10px, -230px);
-    }
-    100% {
-      opacity: 0;
-      transform: translate(-6px, -460px);
-    }
-  }
-
-  @keyframes ring {
-    0% {
-      opacity: 0.8;
-      transform: scale(0.92);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.25);
-    }
-  }
-
-  @keyframes bob {
-    50% {
-      transform: translateY(-6px);
-    }
-  }
-
   /* Dice tumble in quarter turns, like pixel sprites. */
-  @keyframes hop {
-    0% {
-      rotate: 0deg;
-    }
-    25% {
-      rotate: 90deg;
-    }
-    50% {
-      rotate: 180deg;
-    }
-    75% {
-      rotate: 270deg;
-    }
-  }
-
-  @keyframes drift {
-    50% {
-      translate: 0 -8px;
-    }
-  }
-
-  @keyframes shine {
-    0%,
-    100% {
-      background-position: 100% 0;
-    }
-    50% {
-      background-position: 0% 0;
-    }
-  }
-
   @keyframes breathe {
     50% {
       box-shadow:
@@ -858,25 +679,9 @@ const steps = [
     }
   }
 
-  @keyframes sweep {
-    0% {
-      left: -60%;
-    }
-    45%,
-    100% {
-      left: 130%;
-    }
-  }
-
   @keyframes nudge {
     50% {
       transform: translateY(3px);
-    }
-  }
-
-  @keyframes float {
-    50% {
-      transform: translateY(-10px);
     }
   }
 
@@ -981,12 +786,6 @@ const steps = [
     }
   }
 
-  @keyframes spin {
-    to {
-      --angle: 360deg;
-    }
-  }
-
   @keyframes sticky-in {
     to {
       transform: translateY(0);
@@ -997,10 +796,6 @@ const steps = [
     *,
     *::before,
     *::after {
-      animation: none !important;
-    }
-
-    .orbit :global(svg) {
       animation: none !important;
     }
 

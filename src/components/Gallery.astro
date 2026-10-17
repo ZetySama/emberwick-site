@@ -13,10 +13,10 @@ const { shots, label } = Astro.props;
 <div class="gallery" role="region" aria-label={label} tabindex="0">
   <ul class="gallery__track">
     {
-      shots.map((shot) => (
+      shots.map((shot, i) => (
         <li class="gallery__item">
           <figure>
-            <div class="frame">
+            <div class="frame ew-float" style={`--float-y:-6px;--float-dur:6s;--float-delay:${-i * 0.9}s`}>
               <Picture
                 src={shot.src}
                 alt={shot.alt}

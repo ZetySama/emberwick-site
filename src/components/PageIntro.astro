@@ -1,5 +1,8 @@
 ---
 // Shared heading block for inner pages.
+import Sparks from './motion/Sparks.astro';
+import FloatingDice from './motion/FloatingDice.astro';
+
 interface Props {
   eyebrow?: string;
   title: string;
@@ -11,6 +14,8 @@ const { eyebrow, title, id = 'page-title' } = Astro.props;
 
 <header class="page-intro">
   <div class="page-intro__glow" aria-hidden="true"></div>
+  <FloatingDice />
+  <Sparks count={9} rise="320px" />
   <div class="container page-intro__inner">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1 id={id}>{title}</h1>
@@ -38,6 +43,7 @@ const { eyebrow, title, id = 'page-title' } = Astro.props;
 
   .page-intro__inner {
     position: relative;
+    z-index: 1;
   }
 
   .page-intro__lead :global(p) {

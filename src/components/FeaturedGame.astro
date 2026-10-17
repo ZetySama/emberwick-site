@@ -2,6 +2,7 @@
 import { Image, Picture } from 'astro:assets';
 import Button from './Button.astro';
 import GooglePlayBadge from './GooglePlayBadge.astro';
+import FloatingDice from './motion/FloatingDice.astro';
 import type { Game } from '../data/games';
 
 interface Props {
@@ -14,11 +15,12 @@ const [shotA, shotB] = game.screenshots;
 
 <section class="section featured" aria-labelledby="featured-title">
   <div class="featured__glow" aria-hidden="true"></div>
+  <FloatingDice layout="scatter" />
   <div class="container featured__grid">
     <div class="featured__text" data-reveal>
       <p class="eyebrow">Featured game</p>
       <div class="featured__heading">
-        <Image src={game.icon} alt="" width={72} densities={[1, 2]} class="featured__icon" />
+        <Image src={game.icon} alt="" width={72} densities={[1, 2]} class="featured__icon ew-bob" />
         <h2 id="featured-title">{game.title}</h2>
       </div>
       <p class="featured__tagline">{game.tagline}</p>
@@ -39,10 +41,10 @@ const [shotA, shotB] = game.screenshots;
           sizes="(min-width: 900px) 58vw, 100vw"
         />
       </div>
-      <figure class="showcase__shot showcase__shot--a frame">
+      <figure class="showcase__shot showcase__shot--a frame ew-float" style="--float-dur:5.5s">
         <Picture src={shotA.src} alt={shotA.alt} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[240, 480]} sizes="(min-width: 900px) 220px, 42vw" />
       </figure>
-      <figure class="showcase__shot showcase__shot--b frame">
+      <figure class="showcase__shot showcase__shot--b frame ew-float" style="--float-dur:5.5s;--float-delay:-2.5s">
         <Picture src={shotB.src} alt={shotB.alt} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[240, 480]} sizes="(min-width: 900px) 220px, 42vw" />
       </figure>
     </div>
@@ -68,6 +70,7 @@ const [shotA, shotB] = game.screenshots;
 
   .featured__grid {
     position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     align-items: center;

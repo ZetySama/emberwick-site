@@ -7,9 +7,10 @@ interface Props {
   size?: number;
   label?: string;
   class?: string;
+  style?: string;
 }
 
-const { map, palette, size = 64, label, class: className } = Astro.props;
+const { map, palette, size = 64, label, class: className, style } = Astro.props;
 const width = Math.max(...map.map((row) => row.length));
 const height = map.length;
 
@@ -32,6 +33,7 @@ map.forEach((row, y) => {
 
 <svg
   class={className}
+  style={style}
   width={size}
   height={size}
   viewBox={`0 0 ${width} ${height}`}

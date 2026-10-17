@@ -5,7 +5,10 @@ import Button from '../../components/Button.astro';
 import Gallery from '../../components/Gallery.astro';
 import GooglePlayBadge from '../../components/GooglePlayBadge.astro';
 import PixelIcon from '../../components/icons/PixelIcon.astro';
-import { diceMap, palettes } from '../../components/icons/pixel-maps';
+import Sparks from '../../components/motion/Sparks.astro';
+import FloatingDice from '../../components/motion/FloatingDice.astro';
+import DiceOrbit from '../../components/motion/DiceOrbit.astro';
+import { dieFaceMap, diePalettes, type DieValue } from '../../components/icons/dice-faces';
 import { games, type Game } from '../../data/games';
 import { emailWrapHtml, site } from '../../config/site';
 
@@ -25,6 +28,8 @@ const { game } = Astro.props;
     <div class="game-hero__bg" aria-hidden="true">
       <Picture src={game.feature} alt="" formats={['avif', 'webp']} widths={[512, 1024]} sizes="100vw" priority />
     </div>
+    <FloatingDice layout="scatter" />
+    <Sparks count={12} rise="360px" />
     <div class="container game-hero__inner">
       <nav class="crumbs" aria-label="Breadcrumb">
         <a href="/games">Games</a>
@@ -32,7 +37,9 @@ const { game } = Astro.props;
         <span aria-current="page">{game.title}</span>
       </nav>
       <div class="game-hero__head">
-        <Image src={game.icon} alt={`${game.title} app icon`} width={112} densities={[1, 2]} class="game-hero__icon" priority />
+        <DiceOrbit values={[]} ring radius="26%">
+          <Image src={game.icon} alt={`${game.title} app icon`} width={112} densities={[1, 2]} class="game-hero__icon" priority />
+        </DiceOrbit>
         <div>
           <p class="eyebrow">{game.platform}</p>
           <h1 id="game-title">{game.title}</h1>
@@ -60,9 +67,15 @@ const { game } = Astro.props;
         <h2>Features</h2>
         <ul class="features">
           {
-            game.features.map((f) => (
+            game.features.map((f, i) => (
               <li>
-                <PixelIcon map={diceMap} palette={palettes.dice} size={20} />
+                <PixelIcon
+                  map={dieFaceMap(((i % 6) + 1) as DieValue)}
+                  palette={diePalettes[((i % 6) + 1) as DieValue]}
+                  size={22}
+                  class="ew-tumble"
+                  style={`--tumble-dur:4s;--tumble-delay:${-i * 0.7}s`}
+                />
                 <span>{f}</span>
               </li>
             ))
@@ -99,6 +112,11 @@ const { game } = Astro.props;
     position: absolute;
     inset: 0;
     z-index: -1;
+  }
+
+  .game-hero__inner {
+    position: relative;
+    z-index: 1;
   }
 
   .game-hero__bg :global(picture),

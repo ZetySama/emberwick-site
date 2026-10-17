@@ -1,0 +1,85 @@
+---
+// Wraps an icon (the slot) so it bobs gently, with pixel dice tumbling around it and an
+// optional pulsing ring behind it. Decorative dice are hidden from assistive tech.
+import PixelIcon from '../icons/PixelIcon.astro';
+import { dieFaceMap, diePalettes, type DieValue } from '../icons/dice-faces';
+
+interface Props {
+  /** Distance from the icon centre to the dice, in px. */
+  spread?: number;
+  dieSize?: number;
+  values?: DieValue[];
+  ring?: boolean;
+  /** Corner radius of the ring, matching the icon. */
+  radius?: string;
+  class?: string;
+}
+
+const { spread = 88, dieSize = 30, values = [2, 5, 3, 4], ring = false, radius = '24%', class: className } = Astro.props;
+
+// Unit offsets around the icon; multiplied by spread.
+const spots = [
+  [-1, -0.07],
+  [0.93, -0.25],
+  [-0.8, 0.66],
+  [0.86, 0.59],
+];
+const delays = ['0s', '-1.2s', '-2.1s', '-0.6s'];
+const dice = values.slice(0, spots.length).map((v, i) => ({
+  v,
+  x: Math.round(spots[i][0] * spread),
+  y: Math.round(spots[i][1] * spread),
+  delay: delays[i],
+}));
+---
+
+<div class:list={['dice-orbit', className]} style={`--ring-radius:${radius}`}>
+  {ring && <span class="dice-orbit__ring" aria-hidden="true" />}
+  <div class="dice-orbit__icon ew-bob"><slot /></div>
+  {
+    dice.map((d) => (
+      <span class="dice-orbit__die" style={`--ox:${d.x}px;--oy:${d.y}px;--tumble-delay:${d.delay}`} aria-hidden="true">
+        <PixelIcon map={dieFaceMap(d.v)} palette={diePalettes[d.v]} size={dieSize} class="ew-tumble" />
+      </span>
+    ))
+  }
+</div>
+
+<style>
+  .dice-orbit {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+  }
+
+  .dice-orbit__icon {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dice-orbit__ring {
+    position: absolute;
+    inset: -10px;
+    border-radius: var(--ring-radius);
+    border: 2px solid rgba(255, 129, 69, 0.55);
+    animation: ew-ring 2.6s ease-out infinite;
+  }
+
+  .dice-orbit__die {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% + var(--ox)), calc(-50% + var(--oy)));
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
+  }
+
+  .dice-orbit__die :global(svg) {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dice-orbit__ring {
+      display: none;
+    }
+  }
+</style>

@@ -54,6 +54,8 @@ const external = /^https?:\/\//.test(href);
   }
 
   .btn--primary {
+    position: relative;
+    overflow: hidden;
     background: var(--ember);
     color: #1a0f08;
     border: 2px solid var(--ember);
@@ -67,6 +69,24 @@ const external = /^https?:\/\//.test(href);
     color: #1a0f08;
     box-shadow: 0 6px 24px rgba(255, 129, 69, 0.35);
     transform: translateY(-1px);
+  }
+
+  /* A band of light sweeps across the primary button every few seconds. */
+  .btn--primary::after {
+    content: '';
+    position: absolute;
+    inset: -20% auto -20% -60%;
+    width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+    animation: ew-sweep 4.2s ease-in-out 1.5s infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn--primary::after {
+      display: none;
+    }
   }
 
   .btn--outline {
