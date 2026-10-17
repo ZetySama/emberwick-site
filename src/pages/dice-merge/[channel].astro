@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import DiceMergeLanding from '../../components/DiceMergeLanding.astro';
+import { landingSources } from '../../data/landing';
+
+export const getStaticPaths = (() =>
+  Object.entries(landingSources).map(([channel, utmSource]) => ({
+    params: { channel },
+    props: { utmSource },
+  }))) satisfies GetStaticPaths;
+
+const { utmSource } = Astro.props;
+---
+
+<DiceMergeLanding utmSource={utmSource} />
